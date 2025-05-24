@@ -3,18 +3,19 @@ export const FeaturesSection = () => {
     {
       title: "Tokens de Creador",
       description: "Cada creador tiene su propia economía tokenizada",
-      icon: "🪙"
+      icon: "🪙",
     },
     {
       title: "Recompensas Interactivas",
       description: "Gana NFTs y beneficios exclusivos apoyando a tus creadores",
-      icon: "🎁"
+      icon: "🎁",
     },
     {
       title: "Mercado Digital",
-      description: "Compra, vende y comercia contenido único en nuestro mercado Web3",
-      icon: "🛍️"
-    }
+      description:
+        "Compra, vende y comercia contenido único en nuestro mercado Web3",
+      icon: "🛍️",
+    },
   ];
 
   return (

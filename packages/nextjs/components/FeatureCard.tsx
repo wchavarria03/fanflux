@@ -1,6 +1,6 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { ReactNode } from 'react';
+import Image from "next/image";
+import Link from "next/link";
+import { ReactNode } from "react";
 
 interface FeatureCardProps {
   icon: {
@@ -31,7 +31,7 @@ export function FeatureCard({ icon, children, link }: FeatureCardProps) {
         {children}
         {link && (
           <>
-            {' '}
+            {" "}
             <Link href={link.href} passHref className="link hover:text-primary">
               {link.text}
             </Link>

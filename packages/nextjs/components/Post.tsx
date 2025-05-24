@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import { postsApi } from '../services/fakeApi';
+import { postsApi } from "../services/fakeApi";
 
 interface Comment {
   id: string;
@@ -25,21 +25,28 @@ interface PostProps {
   comments: Comment[];
 }
 
-export default function Post({ id, creator, content, timestamp, likes: initialLikes, comments: initialComments }: PostProps) {
+export default function Post({
+  id,
+  creator,
+  content,
+  timestamp,
+  likes: initialLikes,
+  comments: initialComments,
+}: PostProps) {
   const { address } = useAccount();
   const [likes, setLikes] = useState<string[]>(initialLikes);
   const [comments, setComments] = useState<Comment[]>(initialComments);
-  const [newComment, setNewComment] = useState('');
+  const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
 
   const handleLike = async () => {
     if (!address) return;
-    
+
     try {
       const updatedPost = postsApi.toggleLike(id, address);
       setLikes(updatedPost.likes);
     } catch (error) {
-      console.error('Error toggling like:', error);
+      console.error("Error toggling like:", error);
     }
   };
 
@@ -49,24 +56,27 @@ export default function Post({ id, creator, content, timestamp, likes: initialLi
 
     try {
       const newCommentObj = postsApi.addComment(id, address, newComment.trim());
-      setComments(prev => [...prev, {
-        ...newCommentObj,
-        timestamp: new Date(newCommentObj.timestamp).getTime(),
-        userName: 'You' // TODO: Get actual user name
-      }]);
-      setNewComment('');
+      setComments((prev) => [
+        ...prev,
+        {
+          ...newCommentObj,
+          timestamp: new Date(newCommentObj.timestamp).getTime(),
+          userName: "You", // TODO: Get actual user name
+        },
+      ]);
+      setNewComment("");
     } catch (error) {
-      console.error('Error adding comment:', error);
+      console.error("Error adding comment:", error);
     }
   };
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -75,11 +85,15 @@ export default function Post({ id, creator, content, timestamp, likes: initialLi
       {/* Post Header */}
       <div className="flex items-center space-x-4 mb-4">
         <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-          <span className="text-primary font-semibold text-lg">{creator.name[0]}</span>
+          <span className="text-primary font-semibold text-lg">
+            {creator.name[0]}
+          </span>
         </div>
         <div>
           <h3 className="font-semibold text-base-content">{creator.name}</h3>
-          <p className="text-base-content/70 text-sm">{formatTimestamp(timestamp)}</p>
+          <p className="text-base-content/70 text-sm">
+            {formatTimestamp(timestamp)}
+          </p>
         </div>
       </div>
 
@@ -91,13 +105,15 @@ export default function Post({ id, creator, content, timestamp, likes: initialLi
         <button
           onClick={handleLike}
           className={`flex items-center space-x-2 ${
-            address && likes.includes(address) ? 'text-primary' : 'text-base-content/70'
+            address && likes.includes(address)
+              ? "text-primary"
+              : "text-base-content/70"
           }`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
-            fill={address && likes.includes(address) ? 'currentColor' : 'none'}
+            fill={address && likes.includes(address) ? "currentColor" : "none"}
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
@@ -156,13 +172,17 @@ export default function Post({ id, creator, content, timestamp, likes: initialLi
             {comments.map((comment) => (
               <div key={comment.id} className="flex space-x-4">
                 <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                  <span className="text-primary text-sm font-semibold">{comment.userName?.[0] || 'U'}</span>
+                  <span className="text-primary text-sm font-semibold">
+                    {comment.userName?.[0] || "U"}
+                  </span>
                 </div>
                 <div className="flex-1">
                   <div className="bg-base-200 rounded-lg p-3">
                     <p className="text-base-content">{comment.content}</p>
                   </div>
-                  <p className="text-base-content/70 text-sm mt-1">{formatTimestamp(comment.timestamp)}</p>
+                  <p className="text-base-content/70 text-sm mt-1">
+                    {formatTimestamp(comment.timestamp)}
+                  </p>
                 </div>
               </div>
             ))}
@@ -171,4 +191,4 @@ export default function Post({ id, creator, content, timestamp, likes: initialLi
       )}
     </div>
   );
-} 
+}

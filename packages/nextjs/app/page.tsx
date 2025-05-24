@@ -16,7 +16,6 @@ const Home = () => {
       <FeaturesSection />
       <FeaturedCreators />
       <HowItWorks />
-      
     </div>
   );
 };

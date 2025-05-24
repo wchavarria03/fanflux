@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useAccount } from "@starknet-react/core";
 import { useRouter } from "next/navigation";
@@ -16,16 +16,16 @@ export default function FollowerPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FollowerProfile>({
-    name: '',
-    bio: '',
-    interests: ''
+    name: "",
+    bio: "",
+    interests: "",
   });
   const [user, setUser] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [tempFormData, setTempFormData] = useState<FollowerProfile>({
-    name: '',
-    bio: '',
-    interests: ''
+    name: "",
+    bio: "",
+    interests: "",
   });
 
   useEffect(() => {
@@ -46,12 +46,12 @@ export default function FollowerPage() {
         setFormData({
           name: existingUser.name,
           bio: existingUser.bio,
-          interests: existingUser.interests?.join(', ') || '',
+          interests: existingUser.interests?.join(", ") || "",
         });
         setTempFormData({
           name: existingUser.name,
           bio: existingUser.bio,
-          interests: existingUser.interests?.join(', ') || '',
+          interests: existingUser.interests?.join(", ") || "",
         });
       }
     }
@@ -67,11 +67,13 @@ export default function FollowerPage() {
     setIsEditing(false);
   };
 
-  const handleTempChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleTempChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
-    setTempFormData(prev => ({
+    setTempFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -80,8 +82,11 @@ export default function FollowerPage() {
     if (!address) return;
 
     try {
-      const interests = tempFormData.interests.split(',').map(interest => interest.trim()).filter(Boolean);
-      
+      const interests = tempFormData.interests
+        .split(",")
+        .map((interest) => interest.trim())
+        .filter(Boolean);
+
       if (user) {
         // Update existing user
         const updatedUser = userApi.updateUser(address, {
@@ -93,7 +98,7 @@ export default function FollowerPage() {
         setFormData(tempFormData);
       } else {
         // Register new user
-        const newUser = userApi.registerUser(address, 'follower', {
+        const newUser = userApi.registerUser(address, "follower", {
           name: tempFormData.name,
           bio: tempFormData.bio,
           interests,
@@ -103,7 +108,7 @@ export default function FollowerPage() {
       }
       setIsEditing(false);
     } catch (error) {
-      console.error('Error saving profile:', error);
+      console.error("Error saving profile:", error);
       // TODO: Add error handling UI
     }
   };
@@ -123,7 +128,7 @@ export default function FollowerPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">Follower Portal</h1>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Profile Information Form */}
         <div className="bg-base-100 rounded-3xl border border-gradient p-8 h-fit">
@@ -138,10 +143,13 @@ export default function FollowerPage() {
               </button>
             )}
           </div>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Display Name
               </label>
               {isEditing ? (
@@ -161,7 +169,10 @@ export default function FollowerPage() {
             </div>
 
             <div>
-              <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="bio"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Bio
               </label>
               {isEditing ? (
@@ -176,12 +187,17 @@ export default function FollowerPage() {
                   required
                 />
               ) : (
-                <p className="text-lg text-base-content whitespace-pre-wrap">{formData.bio}</p>
+                <p className="text-lg text-base-content whitespace-pre-wrap">
+                  {formData.bio}
+                </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="interests" className="block text-sm font-medium text-gray-700 mb-2">
+              <label
+                htmlFor="interests"
+                className="block text-sm font-medium text-gray-700 mb-2"
+              >
                 Interests
               </label>
               {isEditing ? (
@@ -196,7 +212,9 @@ export default function FollowerPage() {
                   required
                 />
               ) : (
-                <p className="text-lg text-base-content">{formData.interests}</p>
+                <p className="text-lg text-base-content">
+                  {formData.interests}
+                </p>
               )}
             </div>
 
@@ -216,13 +234,15 @@ export default function FollowerPage() {
                   Cancel
                 </button>
               </div>
-            ) : !user && (
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-              >
-                Save Profile
-              </button>
+            ) : (
+              !user && (
+                <button
+                  type="submit"
+                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                >
+                  Save Profile
+                </button>
+              )
             )}
           </form>
         </div>
@@ -238,7 +258,9 @@ export default function FollowerPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold">Complete your profile</h3>
-                  <p className="text-gray-600">Tell us about yourself and your interests</p>
+                  <p className="text-gray-600">
+                    Tell us about yourself and your interests
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
@@ -247,7 +269,9 @@ export default function FollowerPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold">Discover creators</h3>
-                  <p className="text-gray-600">Browse and find creators that match your interests</p>
+                  <p className="text-gray-600">
+                    Browse and find creators that match your interests
+                  </p>
                 </div>
               </div>
               <div className="flex items-start space-x-4">
@@ -256,7 +280,9 @@ export default function FollowerPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold">Start following</h3>
-                  <p className="text-gray-600">Subscribe to your favorite creators and enjoy their content</p>
+                  <p className="text-gray-600">
+                    Subscribe to your favorite creators and enjoy their content
+                  </p>
                 </div>
               </div>
             </div>
@@ -264,15 +290,22 @@ export default function FollowerPage() {
 
           {/* Recommended Creators */}
           <div className="bg-base-100 rounded-3xl border border-gradient p-8">
-            <h2 className="text-2xl font-semibold mb-4">Recommended Creators</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Recommended Creators
+            </h2>
             <div className="grid grid-cols-1 gap-4">
               {userApi.getCreators().map((creator) => (
-                <div key={creator.walletAddress} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                <div
+                  key={creator.walletAddress}
+                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+                >
                   <div className="flex items-center space-x-4">
                     <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
                     <div>
                       <h3 className="font-semibold">{creator.name}</h3>
-                      <p className="text-sm text-gray-600">{creator.tags?.join(', ')}</p>
+                      <p className="text-sm text-gray-600">
+                        {creator.tags?.join(", ")}
+                      </p>
                     </div>
                   </div>
                   <button className="mt-4 w-full bg-gray-100 text-gray-700 py-2 px-4 rounded hover:bg-gray-200 transition-colors">
@@ -286,4 +319,4 @@ export default function FollowerPage() {
       </div>
     </div>
   );
-} 
+}

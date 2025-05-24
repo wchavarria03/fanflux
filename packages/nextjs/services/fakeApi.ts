@@ -1,7 +1,7 @@
 // Types
 export interface User {
   walletAddress: string;
-  role: 'creator' | 'follower';
+  role: "creator" | "follower";
   name: string;
   bio: string;
   interests?: string[];
@@ -60,10 +60,10 @@ export interface TokenReward {
 }
 
 // Storage keys
-const USERS_KEY = 'fanflux_users';
-const POSTS_KEY = 'fanflux_posts';
-const TOKEN_REWARDS_KEY = 'fanflux_token_rewards';
-const COMMUNITIES_KEY = 'fanflux_communities';
+const USERS_KEY = "fanflux_users";
+const POSTS_KEY = "fanflux_posts";
+const TOKEN_REWARDS_KEY = "fanflux_token_rewards";
+const COMMUNITIES_KEY = "fanflux_communities";
 
 // Helper functions
 const getUsers = (): User[] => {
@@ -105,20 +105,24 @@ const saveCommunities = (communities: Community[]) => {
 // User API
 export const userApi = {
   // Register a new user
-  registerUser: (walletAddress: string, role: 'creator' | 'follower', userData: Partial<User>): User => {
+  registerUser: (
+    walletAddress: string,
+    role: "creator" | "follower",
+    userData: Partial<User>,
+  ): User => {
     const users = getUsers();
-    
+
     // Check if user already exists
-    const existingUser = users.find(u => u.walletAddress === walletAddress);
+    const existingUser = users.find((u) => u.walletAddress === walletAddress);
     if (existingUser) {
-      throw new Error('User already exists');
+      throw new Error("User already exists");
     }
 
     const newUser: User = {
       walletAddress,
       role,
-      name: userData.name || '',
-      bio: userData.bio || '',
+      name: userData.name || "",
+      bio: userData.bio || "",
       interests: userData.interests || [],
       tags: userData.tags || [],
       createdAt: new Date().toISOString(),
@@ -132,10 +136,10 @@ export const userApi = {
   // Update user profile
   updateUser: (walletAddress: string, userData: Partial<User>): User => {
     const users = getUsers();
-    const userIndex = users.findIndex(u => u.walletAddress === walletAddress);
-    
+    const userIndex = users.findIndex((u) => u.walletAddress === walletAddress);
+
     if (userIndex === -1) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     users[userIndex] = {
@@ -150,19 +154,19 @@ export const userApi = {
   // Get user by wallet address
   getUser: (walletAddress: string): User | null => {
     const users = getUsers();
-    return users.find(u => u.walletAddress === walletAddress) || null;
+    return users.find((u) => u.walletAddress === walletAddress) || null;
   },
 
   // Get all creators
   getCreators: (): User[] => {
     const users = getUsers();
-    return users.filter(u => u.role === 'creator');
+    return users.filter((u) => u.role === "creator");
   },
 
   // Get all followers
   getFollowers: (): User[] => {
     const users = getUsers();
-    return users.filter(u => u.role === 'follower');
+    return users.filter((u) => u.role === "follower");
   },
 };
 
@@ -172,11 +176,13 @@ export const postsApi = {
   createPost: (creatorAddress: string, content: string): Post => {
     const posts = getPosts();
     const users = getUsers();
-    
+
     // Verify creator exists
-    const creator = users.find(u => u.walletAddress === creatorAddress && u.role === 'creator');
+    const creator = users.find(
+      (u) => u.walletAddress === creatorAddress && u.role === "creator",
+    );
     if (!creator) {
-      throw new Error('Creator not found');
+      throw new Error("Creator not found");
     }
 
     const newPost: Post = {
@@ -201,16 +207,16 @@ export const postsApi = {
   // Get posts by creator
   getCreatorPosts: (creatorAddress: string): Post[] => {
     const posts = getPosts();
-    return posts.filter(p => p.creatorAddress === creatorAddress);
+    return posts.filter((p) => p.creatorAddress === creatorAddress);
   },
 
   // Like/Unlike a post
   toggleLike: (postId: string, userAddress: string): Post => {
     const posts = getPosts();
-    const postIndex = posts.findIndex(p => p.id === postId);
-    
+    const postIndex = posts.findIndex((p) => p.id === postId);
+
     if (postIndex === -1) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
 
     const post = posts[postIndex];
@@ -227,12 +233,16 @@ export const postsApi = {
   },
 
   // Add a comment
-  addComment: (postId: string, userAddress: string, content: string): Comment => {
+  addComment: (
+    postId: string,
+    userAddress: string,
+    content: string,
+  ): Comment => {
     const posts = getPosts();
-    const postIndex = posts.findIndex(p => p.id === postId);
-    
+    const postIndex = posts.findIndex((p) => p.id === postId);
+
     if (postIndex === -1) {
-      throw new Error('Post not found');
+      throw new Error("Post not found");
     }
 
     const comment: Comment = {
@@ -251,7 +261,7 @@ export const postsApi = {
   // Get comments for a post
   getComments: (postId: string): Comment[] => {
     const posts = getPosts();
-    const post = posts.find(p => p.id === postId);
+    const post = posts.find((p) => p.id === postId);
     return post ? post.comments : [];
   },
 };
@@ -259,7 +269,13 @@ export const postsApi = {
 // Token API
 export const tokenApi = {
   // Create a new token reward
-  createTokenReward: (creatorAddress: string, data: Omit<TokenReward, 'id' | 'creatorAddress' | 'mintedSupply' | 'createdAt'>): TokenReward => {
+  createTokenReward: (
+    creatorAddress: string,
+    data: Omit<
+      TokenReward,
+      "id" | "creatorAddress" | "mintedSupply" | "createdAt"
+    >,
+  ): TokenReward => {
     const rewards = getTokenRewards();
     const newReward: TokenReward = {
       id: crypto.randomUUID(),
@@ -269,15 +285,15 @@ export const tokenApi = {
       createdAt: new Date().toISOString(),
       rewards: {
         likes: {
-          amount: data.rewards.likes?.amount || 0
+          amount: data.rewards.likes?.amount || 0,
         },
         comments: {
-          amount: data.rewards.comments?.amount || 0
+          amount: data.rewards.comments?.amount || 0,
         },
         followers: {
-          amount: data.rewards.followers?.amount || 0
-        }
-      }
+          amount: data.rewards.followers?.amount || 0,
+        },
+      },
     };
     rewards.push(newReward);
     saveTokenRewards(rewards);
@@ -287,7 +303,7 @@ export const tokenApi = {
   // Get all token rewards for a creator
   getCreatorTokenRewards: (creatorAddress: string): TokenReward[] => {
     const rewards = getTokenRewards();
-    return rewards.filter(r => r.creatorAddress === creatorAddress);
+    return rewards.filter((r) => r.creatorAddress === creatorAddress);
   },
 
   // Award tokens to a user based on their interactions
@@ -295,47 +311,65 @@ export const tokenApi = {
     const users = getUsers();
     const posts = getPosts();
     const rewards = getTokenRewards();
-    
+
     // Get user's interactions with creator's posts
     const userInteractions = posts
-      .filter(p => p.creatorAddress === creatorAddress)
-      .reduce((acc, post) => {
-        const likes = post.likes.includes(userAddress) ? 1 : 0;
-        const comments = post.comments.filter(c => c.userAddress === userAddress).length;
-        return {
-          likes: acc.likes + likes,
-          comments: acc.comments + comments
-        };
-      }, { likes: 0, comments: 0 });
+      .filter((p) => p.creatorAddress === creatorAddress)
+      .reduce(
+        (acc, post) => {
+          const likes = post.likes.includes(userAddress) ? 1 : 0;
+          const comments = post.comments.filter(
+            (c) => c.userAddress === userAddress,
+          ).length;
+          return {
+            likes: acc.likes + likes,
+            comments: acc.comments + comments,
+          };
+        },
+        { likes: 0, comments: 0 },
+      );
 
     // Check if user is a follower
-    const user = users.find(u => u.walletAddress === userAddress);
-    const isFollower = user?.role === 'follower';
+    const user = users.find((u) => u.walletAddress === userAddress);
+    const isFollower = user?.role === "follower";
 
     // Find applicable reward
     const applicableReward = rewards
-      .filter(r => r.creatorAddress === creatorAddress)
-      .find(r => r.mintedSupply < r.totalSupply);
+      .filter((r) => r.creatorAddress === creatorAddress)
+      .find((r) => r.mintedSupply < r.totalSupply);
 
     if (applicableReward) {
       // Calculate tokens to award
-      const likeTokens = userInteractions.likes * applicableReward.rewards.likes.amount;
-      const commentTokens = userInteractions.comments * applicableReward.rewards.comments.amount;
-      const followerTokens = isFollower ? applicableReward.rewards.followers.amount : 0;
+      const likeTokens =
+        userInteractions.likes * applicableReward.rewards.likes.amount;
+      const commentTokens =
+        userInteractions.comments * applicableReward.rewards.comments.amount;
+      const followerTokens = isFollower
+        ? applicableReward.rewards.followers.amount
+        : 0;
       const totalTokens = likeTokens + commentTokens + followerTokens;
-      
+
       // Check if we can mint these tokens
-      if (totalTokens > 0 && (applicableReward.mintedSupply + totalTokens) <= applicableReward.totalSupply) {
+      if (
+        totalTokens > 0 &&
+        applicableReward.mintedSupply + totalTokens <=
+          applicableReward.totalSupply
+      ) {
         // Update user's token balance
-        const userIndex = users.findIndex(u => u.walletAddress === userAddress);
+        const userIndex = users.findIndex(
+          (u) => u.walletAddress === userAddress,
+        );
         if (userIndex !== -1) {
           const user = users[userIndex];
           user.tokens = user.tokens || {};
-          user.tokens[creatorAddress] = (user.tokens[creatorAddress] || 0) + totalTokens;
+          user.tokens[creatorAddress] =
+            (user.tokens[creatorAddress] || 0) + totalTokens;
           saveUsers(users);
 
           // Update minted supply
-          const rewardIndex = rewards.findIndex(r => r.id === applicableReward.id);
+          const rewardIndex = rewards.findIndex(
+            (r) => r.id === applicableReward.id,
+          );
           if (rewardIndex !== -1) {
             rewards[rewardIndex].mintedSupply += totalTokens;
             saveTokenRewards(rewards);
@@ -352,22 +386,27 @@ export const tokenApi = {
   // Get user's token balance for a specific creator
   getUserTokens: (userAddress: string, creatorAddress: string): number => {
     const users = getUsers();
-    const user = users.find(u => u.walletAddress === userAddress);
+    const user = users.find((u) => u.walletAddress === userAddress);
     return user?.tokens?.[creatorAddress] || 0;
   },
 
   // Get user's total token balances across all creators
-  getUserAllTokens: (userAddress: string): { [creatorAddress: string]: number } => {
+  getUserAllTokens: (
+    userAddress: string,
+  ): { [creatorAddress: string]: number } => {
     const users = getUsers();
-    const user = users.find(u => u.walletAddress === userAddress);
+    const user = users.find((u) => u.walletAddress === userAddress);
     return user?.tokens || {};
-  }
+  },
 };
 
 // Community API
 export const communityApi = {
   // Create a new community
-  createCommunity: (creatorAddress: string, data: Omit<Community, 'id' | 'creatorAddress' | 'createdAt'>): Community => {
+  createCommunity: (
+    creatorAddress: string,
+    data: Omit<Community, "id" | "creatorAddress" | "createdAt">,
+  ): Community => {
     const communities = getCommunities();
     const newCommunity: Community = {
       id: crypto.randomUUID(),
@@ -385,16 +424,21 @@ export const communityApi = {
   // Get community by creator address
   getCreatorCommunity: (creatorAddress: string): Community | null => {
     const communities = getCommunities();
-    return communities.find(c => c.creatorAddress === creatorAddress) || null;
+    return communities.find((c) => c.creatorAddress === creatorAddress) || null;
   },
 
   // Update community
-  updateCommunity: (creatorAddress: string, data: Partial<Community>): Community => {
+  updateCommunity: (
+    creatorAddress: string,
+    data: Partial<Community>,
+  ): Community => {
     const communities = getCommunities();
-    const communityIndex = communities.findIndex(c => c.creatorAddress === creatorAddress);
-    
+    const communityIndex = communities.findIndex(
+      (c) => c.creatorAddress === creatorAddress,
+    );
+
     if (communityIndex === -1) {
-      throw new Error('Community not found');
+      throw new Error("Community not found");
     }
 
     communities[communityIndex] = {
@@ -415,35 +459,35 @@ const initializeMockData = () => {
   if (users.length === 0) {
     const mockUsers: User[] = [
       {
-        walletAddress: '0x123',
-        role: 'creator',
-        name: 'Alice',
-        bio: 'Digital artist and NFT creator',
-        tags: ['art', 'nft', 'digital'],
+        walletAddress: "0x123",
+        role: "creator",
+        name: "Alice",
+        bio: "Digital artist and NFT creator",
+        tags: ["art", "nft", "digital"],
         createdAt: new Date().toISOString(),
       },
       {
-        walletAddress: '0x456',
-        role: 'follower',
-        name: 'Bob',
-        bio: 'NFT enthusiast',
-        interests: ['art', 'collecting'],
+        walletAddress: "0x456",
+        role: "follower",
+        name: "Bob",
+        bio: "NFT enthusiast",
+        interests: ["art", "collecting"],
         createdAt: new Date().toISOString(),
       },
       {
-        walletAddress: '0x789',
-        role: 'creator',
-        name: 'Charlie',
-        bio: 'Web3 developer and educator',
-        tags: ['web3', 'development', 'education'],
+        walletAddress: "0x789",
+        role: "creator",
+        name: "Charlie",
+        bio: "Web3 developer and educator",
+        tags: ["web3", "development", "education"],
         createdAt: new Date().toISOString(),
       },
       {
-        walletAddress: '0xabc',
-        role: 'follower',
-        name: 'Diana',
-        bio: 'Crypto investor and tech enthusiast',
-        interests: ['crypto', 'web3', 'technology'],
+        walletAddress: "0xabc",
+        role: "follower",
+        name: "Diana",
+        bio: "Crypto investor and tech enthusiast",
+        interests: ["crypto", "web3", "technology"],
         createdAt: new Date().toISOString(),
       },
     ];
@@ -453,121 +497,136 @@ const initializeMockData = () => {
   if (posts.length === 0) {
     const mockPosts: Post[] = [
       {
-        id: '1',
-        creatorAddress: '0x123',
-        content: 'Just launched my new NFT collection! Check it out and let me know what you think. This collection represents my journey in digital art over the past year.',
+        id: "1",
+        creatorAddress: "0x123",
+        content:
+          "Just launched my new NFT collection! Check it out and let me know what you think. This collection represents my journey in digital art over the past year.",
         timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-        likes: ['0x456', '0xabc'],
+        likes: ["0x456", "0xabc"],
         comments: [
           {
-            id: '1',
-            postId: '1',
-            userAddress: '0x456',
-            content: 'Looks amazing! Can\'t wait to see more.',
+            id: "1",
+            postId: "1",
+            userAddress: "0x456",
+            content: "Looks amazing! Can't wait to see more.",
             timestamp: new Date(Date.now() - 3500000).toISOString(),
           },
           {
-            id: '2',
-            postId: '1',
-            userAddress: '0xabc',
-            content: 'The colors in this collection are stunning! What inspired you?',
+            id: "2",
+            postId: "1",
+            userAddress: "0xabc",
+            content:
+              "The colors in this collection are stunning! What inspired you?",
             timestamp: new Date(Date.now() - 3400000).toISOString(),
           },
           {
-            id: '3',
-            postId: '1',
-            userAddress: '0x123',
-            content: 'Thanks everyone! The inspiration came from my travels through Southeast Asia last summer.',
+            id: "3",
+            postId: "1",
+            userAddress: "0x123",
+            content:
+              "Thanks everyone! The inspiration came from my travels through Southeast Asia last summer.",
             timestamp: new Date(Date.now() - 3300000).toISOString(),
           },
         ],
       },
       {
-        id: '2',
-        creatorAddress: '0x789',
-        content: 'Just published a new tutorial on building smart contracts with Cairo! Check it out and let me know if you have any questions. Link in bio.',
+        id: "2",
+        creatorAddress: "0x789",
+        content:
+          "Just published a new tutorial on building smart contracts with Cairo! Check it out and let me know if you have any questions. Link in bio.",
         timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
-        likes: ['0x456', '0xabc', '0x123'],
+        likes: ["0x456", "0xabc", "0x123"],
         comments: [
           {
-            id: '4',
-            postId: '2',
-            userAddress: '0x456',
-            content: 'This is exactly what I needed! Been struggling with Cairo for weeks.',
+            id: "4",
+            postId: "2",
+            userAddress: "0x456",
+            content:
+              "This is exactly what I needed! Been struggling with Cairo for weeks.",
             timestamp: new Date(Date.now() - 7100000).toISOString(),
           },
           {
-            id: '5',
-            postId: '2',
-            userAddress: '0xabc',
-            content: 'Great tutorial! Would love to see more content about testing strategies.',
+            id: "5",
+            postId: "2",
+            userAddress: "0xabc",
+            content:
+              "Great tutorial! Would love to see more content about testing strategies.",
             timestamp: new Date(Date.now() - 7000000).toISOString(),
           },
         ],
       },
       {
-        id: '3',
-        creatorAddress: '0x123',
-        content: 'Working on some exciting new pieces for my next collection. Here\'s a sneak peek at the concept art. What do you think about the direction?',
+        id: "3",
+        creatorAddress: "0x123",
+        content:
+          "Working on some exciting new pieces for my next collection. Here's a sneak peek at the concept art. What do you think about the direction?",
         timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-        likes: ['0x789', '0xabc'],
+        likes: ["0x789", "0xabc"],
         comments: [
           {
-            id: '6',
-            postId: '3',
-            userAddress: '0x789',
-            content: 'The geometric patterns are fascinating! Are you using any specific algorithms to generate these?',
+            id: "6",
+            postId: "3",
+            userAddress: "0x789",
+            content:
+              "The geometric patterns are fascinating! Are you using any specific algorithms to generate these?",
             timestamp: new Date(Date.now() - 86000000).toISOString(),
           },
           {
-            id: '7',
-            postId: '3',
-            userAddress: '0xabc',
-            content: 'This style reminds me of your early work, but with a more refined approach. Love it!',
+            id: "7",
+            postId: "3",
+            userAddress: "0xabc",
+            content:
+              "This style reminds me of your early work, but with a more refined approach. Love it!",
             timestamp: new Date(Date.now() - 85800000).toISOString(),
           },
           {
-            id: '8',
-            postId: '3',
-            userAddress: '0x456',
-            content: 'Can\'t wait to see the final pieces! Will there be an auction?',
+            id: "8",
+            postId: "3",
+            userAddress: "0x456",
+            content:
+              "Can't wait to see the final pieces! Will there be an auction?",
             timestamp: new Date(Date.now() - 85600000).toISOString(),
           },
           {
-            id: '9',
-            postId: '3',
-            userAddress: '0x123',
-            content: 'Thanks for the feedback! Yes, I\'m using a custom algorithm I developed. And yes, there will be an auction next month!',
+            id: "9",
+            postId: "3",
+            userAddress: "0x123",
+            content:
+              "Thanks for the feedback! Yes, I'm using a custom algorithm I developed. And yes, there will be an auction next month!",
             timestamp: new Date(Date.now() - 85400000).toISOString(),
           },
         ],
       },
       {
-        id: '4',
-        creatorAddress: '0x789',
-        content: 'Just wrapped up a successful workshop on StarkNet development! Thanks to everyone who participated. The community questions were fantastic. I\'ll be posting the recording soon.',
+        id: "4",
+        creatorAddress: "0x789",
+        content:
+          "Just wrapped up a successful workshop on StarkNet development! Thanks to everyone who participated. The community questions were fantastic. I'll be posting the recording soon.",
         timestamp: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-        likes: ['0x123', '0x456', '0xabc'],
+        likes: ["0x123", "0x456", "0xabc"],
         comments: [
           {
-            id: '10',
-            postId: '4',
-            userAddress: '0x123',
-            content: 'The workshop was incredibly helpful! Learned so much about account abstraction.',
+            id: "10",
+            postId: "4",
+            userAddress: "0x123",
+            content:
+              "The workshop was incredibly helpful! Learned so much about account abstraction.",
             timestamp: new Date(Date.now() - 172000000).toISOString(),
           },
           {
-            id: '11',
-            postId: '4',
-            userAddress: '0x456',
-            content: 'Will you be doing more workshops soon? I missed this one but would love to join the next.',
+            id: "11",
+            postId: "4",
+            userAddress: "0x456",
+            content:
+              "Will you be doing more workshops soon? I missed this one but would love to join the next.",
             timestamp: new Date(Date.now() - 171000000).toISOString(),
           },
           {
-            id: '12',
-            postId: '4',
-            userAddress: '0x789',
-            content: 'Yes! Planning another one next month. I\'ll announce the date soon.',
+            id: "12",
+            postId: "4",
+            userAddress: "0x789",
+            content:
+              "Yes! Planning another one next month. I'll announce the date soon.",
             timestamp: new Date(Date.now() - 170000000).toISOString(),
           },
         ],
@@ -578,4 +637,4 @@ const initializeMockData = () => {
 };
 
 // Initialize mock data
-initializeMockData(); 
+initializeMockData();

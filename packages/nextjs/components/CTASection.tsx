@@ -32,7 +32,8 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
                 Tu Comunidad te Espera
               </h2>
               <p className="text-xl text-purple-50/90 max-w-2xl mx-auto leading-relaxed">
-                Transforma tu pasión en una economía digital y conecta con tus fans de forma revolucionaria
+                Transforma tu pasión en una economía digital y conecta con tus
+                fans de forma revolucionaria
               </p>
             </motion.div>
 
@@ -79,7 +80,8 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
               Acceso Exclusivo
             </h3>
             <p className="text-gray-400 mb-8 max-w-xl mx-auto text-lg">
-              Conecta tu wallet para descubrir contenido único, beneficios especiales y una nueva forma de interactuar
+              Conecta tu wallet para descubrir contenido único, beneficios
+              especiales y una nueva forma de interactuar
             </p>
             <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 p-1 rounded-full inline-block">
               <div className="bg-gray-900 px-8 py-3 rounded-full font-medium text-purple-300 animate-pulse">

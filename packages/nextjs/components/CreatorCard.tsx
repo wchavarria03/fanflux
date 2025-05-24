@@ -19,8 +19,13 @@ export const CreatorCard = ({ creator }: any) => {
           <span>🎮 {creator.fans} fans</span>
         </div>
         <div className="flex justify-between items-center">
-          <span className="bg-purple-600 text-sm px-3 py-1 rounded-full">Token: {creator.tokens}</span>
-          <Link href={`/creators/${creator.name}`} className="text-pink-400 hover:text-pink-300">
+          <span className="bg-purple-600 text-sm px-3 py-1 rounded-full">
+            Token: {creator.tokens}
+          </span>
+          <Link
+            href={`/creators/${creator.name}`}
+            className="text-pink-400 hover:text-pink-300"
+          >
             Ver Perfil
           </Link>
         </div>

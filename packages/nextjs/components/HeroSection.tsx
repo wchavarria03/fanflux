@@ -18,7 +18,8 @@ export const HeroSection = () => (
       transition={{ duration: 0.8 }}
     >
       <h1 className="text-5xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-purple-300 via-pink-400 to-purple-500 bg-clip-text text-transparent leading-tight">
-        Revoluciona la<br className="hidden md:block" /> Conexión con tus Fans
+        Revoluciona la
+        <br className="hidden md:block" /> Conexión con tus Fans
         <div className="mt-4 text-4xl md:text-5xl bg-gradient-to-r from-pink-400 to-yellow-300 bg-clip-text text-transparent">
           En la Web3
         </div>
@@ -45,7 +46,7 @@ export const HeroSection = () => (
       className="flex flex-col md:flex-row justify-center items-center gap-6 mb-20"
     >
       <ConnectedAddress className="transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-purple-500/20" />
-      
+
       <Link
         href="/creators"
         className="relative group bg-gradient-to-br from-purple-600 to-pink-600 px-8 py-4 rounded-2xl font-semibold transition-all 
