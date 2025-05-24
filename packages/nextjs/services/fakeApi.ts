@@ -34,17 +34,19 @@ export interface Post {
 export interface TokenReward {
   id: string;
   creatorAddress: string;
-  totalSupply: number; // Total number of tokens that can be minted
-  mintedSupply: number; // Number of tokens already minted
+  totalSupply: number;
+  mintedSupply: number;
   rewards: {
     likes: {
-      amount: number; // Tokens per like
+      amount: number;
     };
     comments: {
-      amount: number; // Tokens per comment
+      amount: number;
+    };
+    followers: {
+      amount: number;
     };
   };
-  createdAt: string;
 }
 
 // Storage keys
@@ -237,24 +239,25 @@ export const postsApi = {
 // Token API
 export const tokenApi = {
   // Create a new token reward
-  createTokenReward: (creatorAddress: string, rewardData: Omit<TokenReward, 'id' | 'creatorAddress' | 'createdAt' | 'mintedSupply'>): TokenReward => {
+  createTokenReward: (creatorAddress: string, data: Omit<TokenReward, 'id' | 'creatorAddress' | 'mintedSupply'>): TokenReward => {
     const rewards = getTokenRewards();
-    const users = getUsers();
-    
-    // Verify creator exists
-    const creator = users.find(u => u.walletAddress === creatorAddress && u.role === 'creator');
-    if (!creator) {
-      throw new Error('Creator not found');
-    }
-
     const newReward: TokenReward = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       creatorAddress,
-      ...rewardData,
       mintedSupply: 0,
-      createdAt: new Date().toISOString(),
+      totalSupply: data.totalSupply,
+      rewards: {
+        likes: {
+          amount: data.rewards.likes?.amount || 0
+        },
+        comments: {
+          amount: data.rewards.comments?.amount || 0
+        },
+        followers: {
+          amount: data.rewards.followers?.amount || 0
+        }
+      }
     };
-
     rewards.push(newReward);
     saveTokenRewards(rewards);
     return newReward;
@@ -284,6 +287,10 @@ export const tokenApi = {
         };
       }, { likes: 0, comments: 0 });
 
+    // Check if user is a follower
+    const user = users.find(u => u.walletAddress === userAddress);
+    const isFollower = user?.role === 'follower';
+
     // Find applicable reward
     const applicableReward = rewards
       .filter(r => r.creatorAddress === creatorAddress)
@@ -293,7 +300,8 @@ export const tokenApi = {
       // Calculate tokens to award
       const likeTokens = userInteractions.likes * applicableReward.rewards.likes.amount;
       const commentTokens = userInteractions.comments * applicableReward.rewards.comments.amount;
-      const totalTokens = likeTokens + commentTokens;
+      const followerTokens = isFollower ? applicableReward.rewards.followers.amount : 0;
+      const totalTokens = likeTokens + commentTokens + followerTokens;
       
       // Check if we can mint these tokens
       if (totalTokens > 0 && (applicableReward.mintedSupply + totalTokens) <= applicableReward.totalSupply) {

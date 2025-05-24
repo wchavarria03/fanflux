@@ -18,6 +18,9 @@ interface TokenRewardForm {
   commentReward: {
     amount: number;
   };
+  followerReward: {
+    amount: number;
+  };
 }
 
 interface TokenGenerationForm {
@@ -39,6 +42,9 @@ export default function CreatorPage() {
     },
     commentReward: {
       amount: 5
+    },
+    followerReward: {
+      amount: 10
     }
   });
   const [tokenGenerationData, setTokenGenerationData] = useState<TokenGenerationForm>({
@@ -46,6 +52,7 @@ export default function CreatorPage() {
   });
   const [user, setUser] = useState<User | null>(null);
   const [tokenRewards, setTokenRewards] = useState<TokenReward[]>([]);
+  const [isNewCreator, setIsNewCreator] = useState(true);
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
@@ -62,6 +69,7 @@ export default function CreatorPage() {
       const existingUser = userApi.getUser(address);
       if (existingUser) {
         setUser(existingUser);
+        setIsNewCreator(false);
         setFormData({
           name: existingUser.name,
           description: existingUser.bio,
@@ -113,7 +121,8 @@ export default function CreatorPage() {
         totalSupply: tokenGenerationData.amount,
         rewards: {
           likes: tokenFormData.likeReward,
-          comments: tokenFormData.commentReward
+          comments: tokenFormData.commentReward,
+          followers: tokenFormData.followerReward
         }
       });
       setTokenRewards(prev => [...prev, newReward]);
@@ -123,6 +132,9 @@ export default function CreatorPage() {
         },
         commentReward: {
           amount: 5
+        },
+        followerReward: {
+          amount: 10
         }
       });
       setTokenGenerationData({
@@ -145,12 +157,12 @@ export default function CreatorPage() {
   const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     
-    if (name.startsWith('likeReward.') || name.startsWith('commentReward.')) {
+    if (name.startsWith('likeReward.') || name.startsWith('commentReward.') || name.startsWith('followerReward.')) {
       const [rewardType, field] = name.split('.');
       setTokenFormData(prev => ({
         ...prev,
         [rewardType]: {
-          ...prev[rewardType as 'likeReward' | 'commentReward'],
+          ...prev[rewardType as 'likeReward' | 'commentReward' | 'followerReward'],
           [field]: parseInt(value) || 0
         }
       }));
@@ -187,139 +199,97 @@ export default function CreatorPage() {
       <h1 className="text-4xl font-bold mb-8 text-base-content">Creator Portal</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Community Information Form */}
-        <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
-          <h2 className="text-2xl font-semibold mb-6 text-base-content">Community Information</h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-base-content mb-2">
-                Community Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Enter your community name"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-base-content mb-2">
-                Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={4}
-                className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="Describe your community"
-                required
-              />
-            </div>
-
-            <div>
-              <label htmlFor="tags" className="block text-sm font-medium text-base-content mb-2">
-                Tags (comma-separated)
-              </label>
-              <input
-                type="text"
-                id="tags"
-                name="tags"
-                value={formData.tags}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
-                placeholder="e.g., art, music, technology"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
-            >
-              {user ? 'Update Profile' : 'Create Community'}
-            </button>
-          </form>
-        </div>
-
-        {/* Token Settings and Generation */}
-        <div className="space-y-6">
+        <div className="space-y-8">
+          {/* Community Information */}
           <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
-            <h2 className="text-2xl font-semibold mb-6 text-base-content">Token Settings</h2>
-            <form onSubmit={handleTokenSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-base-content">Like Rewards</h3>
+            <h2 className="text-2xl font-semibold mb-6 text-base-content">Community Information</h2>
+            {isNewCreator ? (
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="likeAmount" className="block text-sm font-medium text-base-content mb-2">
-                    Tokens per Like
+                  <label htmlFor="name" className="block text-sm font-medium text-base-content mb-2">
+                    Community Name
                   </label>
                   <input
-                    type="number"
-                    id="likeAmount"
-                    name="likeReward.amount"
-                    value={tokenFormData.likeReward.amount}
-                    onChange={handleTokenChange}
-                    min="0"
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Enter your community name"
                     required
                   />
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-base-content">Comment Rewards</h3>
                 <div>
-                  <label htmlFor="commentAmount" className="block text-sm font-medium text-base-content mb-2">
-                    Tokens per Comment
+                  <label htmlFor="description" className="block text-sm font-medium text-base-content mb-2">
+                    Description
                   </label>
-                  <input
-                    type="number"
-                    id="commentAmount"
-                    name="commentReward.amount"
-                    value={tokenFormData.commentReward.amount}
-                    onChange={handleTokenChange}
-                    min="0"
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={formData.description}
+                    onChange={handleChange}
+                    rows={4}
                     className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="Describe your community"
                     required
                   />
                 </div>
-              </div>
 
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium text-base-content">Generate New Tokens</h3>
                 <div>
-                  <label htmlFor="tokenAmount" className="block text-sm font-medium text-base-content mb-2">
-                    Amount to Generate
+                  <label htmlFor="tags" className="block text-sm font-medium text-base-content mb-2">
+                    Tags (comma-separated)
                   </label>
                   <input
-                    type="number"
-                    id="tokenAmount"
-                    name="amount"
-                    value={tokenGenerationData.amount}
-                    onChange={handleTokenGenerationChange}
-                    min="1"
+                    type="text"
+                    id="tags"
+                    name="tags"
+                    value={formData.tags}
+                    onChange={handleChange}
                     className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                    placeholder="e.g., art, music, technology"
                     required
                   />
                 </div>
-              </div>
 
-              <button
-                type="submit"
-                className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
-              >
-                Generate Tokens
-              </button>
-            </form>
+                <button
+                  type="submit"
+                  className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
+                >
+                  Create Community
+                </button>
+              </form>
+            ) : (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium text-base-content/70 mb-1">Community Name</h3>
+                  <p className="text-lg text-base-content">{user?.name}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-base-content/70 mb-1">Description</h3>
+                  <p className="text-base-content whitespace-pre-wrap">{user?.bio}</p>
+                </div>
+
+                <div>
+                  <h3 className="text-sm font-medium text-base-content/70 mb-1">Tags</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {user?.tags?.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-base-200 text-base-content rounded-full text-sm"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Token Tracking */}
+          {/* Token Distribution */}
           <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
             <h3 className="text-xl font-semibold mb-4 text-base-content">Token Distribution</h3>
             <div className="space-y-4">
@@ -333,8 +303,9 @@ export default function CreatorPage() {
                         <p className="text-base-content/70">Remaining: {reward.totalSupply - reward.mintedSupply}</p>
                       </div>
                       <div>
-                        <p className="text-base-content/70">Likes: {reward.rewards.likes.amount} tokens</p>
-                        <p className="text-base-content/70">Comments: {reward.rewards.comments.amount} tokens</p>
+                        <p className="text-base-content/70">Likes: {reward.rewards?.likes?.amount || 0} tokens</p>
+                        <p className="text-base-content/70">Comments: {reward.rewards?.comments?.amount || 0} tokens</p>
+                        <p className="text-base-content/70">Followers: {reward.rewards?.followers?.amount || 0} tokens</p>
                       </div>
                     </div>
                   </div>
@@ -344,6 +315,95 @@ export default function CreatorPage() {
               )}
             </div>
           </div>
+        </div>
+
+        {/* Token Settings */}
+        <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
+          <h2 className="text-2xl font-semibold mb-6 text-base-content">Token Settings</h2>
+          <form onSubmit={handleTokenSubmit} className="space-y-6">
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-base-content">Like Rewards</h3>
+              <div>
+                <label htmlFor="likeAmount" className="block text-sm font-medium text-base-content mb-2">
+                  Tokens per Like
+                </label>
+                <input
+                  type="number"
+                  id="likeAmount"
+                  name="likeReward.amount"
+                  value={tokenFormData.likeReward.amount}
+                  onChange={handleTokenChange}
+                  min="0"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-base-content">Comment Rewards</h3>
+              <div>
+                <label htmlFor="commentAmount" className="block text-sm font-medium text-base-content mb-2">
+                  Tokens per Comment
+                </label>
+                <input
+                  type="number"
+                  id="commentAmount"
+                  name="commentReward.amount"
+                  value={tokenFormData.commentReward.amount}
+                  onChange={handleTokenChange}
+                  min="0"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-base-content">Follower Rewards</h3>
+              <div>
+                <label htmlFor="followerAmount" className="block text-sm font-medium text-base-content mb-2">
+                  Tokens per Follower
+                </label>
+                <input
+                  type="number"
+                  id="followerAmount"
+                  name="followerReward.amount"
+                  value={tokenFormData.followerReward.amount}
+                  onChange={handleTokenChange}
+                  min="0"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-lg font-medium text-base-content">Generate New Tokens</h3>
+              <div>
+                <label htmlFor="tokenAmount" className="block text-sm font-medium text-base-content mb-2">
+                  Amount to Generate
+                </label>
+                <input
+                  type="number"
+                  id="tokenAmount"
+                  name="amount"
+                  value={tokenGenerationData.amount}
+                  onChange={handleTokenGenerationChange}
+                  min="1"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
+            >
+              Generate Tokens
+            </button>
+          </form>
         </div>
       </div>
     </div>
