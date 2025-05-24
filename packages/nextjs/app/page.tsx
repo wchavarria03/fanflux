@@ -1,9 +1,14 @@
+'use client';
+
 import Link from "next/link";
 import Image from "next/image";
 import { ConnectedAddress } from "~~/components/ConnectedAddress";
 import { RoleCarousel } from "~~/components/RoleCarousel";
+import { useAccount } from "@starknet-react/core";
 
 const Home = () => {
+  const { isConnected } = useAccount();
+
   return (
     <div className="flex items-center flex-col flex-grow pt-10">
       <div className="px-5">
@@ -26,8 +31,15 @@ const Home = () => {
 
       <div className="bg-container flex-grow w-full mt-16 px-8 py-12">
         <div className="flex justify-center items-center gap-12 flex-col sm:flex-row">
+          {!isConnected ? (
+            <div className="text-center">
+              <h2 className="text-2xl font-semibold mb-4">Connect Your Wallet</h2>
+              <p className="text-gray-600">Please connect your wallet to access FanFlux features</p>
+            </div>
+          ) : (
+            <RoleCarousel />
+          )}
         </div>
-        <RoleCarousel />
       </div>
     </div>
   );
