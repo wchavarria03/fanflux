@@ -10,6 +10,15 @@ export interface User {
   tokens?: { [creatorAddress: string]: number }; // Map of creator address to token amount
 }
 
+export interface Community {
+  id: string;
+  creatorAddress: string;
+  name: string;
+  description: string;
+  tags: string[];
+  createdAt: string;
+}
+
 export interface Comment {
   id: string;
   postId: string;
@@ -36,6 +45,7 @@ export interface TokenReward {
   creatorAddress: string;
   totalSupply: number;
   mintedSupply: number;
+  createdAt: string;
   rewards: {
     likes: {
       amount: number;
@@ -53,6 +63,7 @@ export interface TokenReward {
 const USERS_KEY = 'fanflux_users';
 const POSTS_KEY = 'fanflux_posts';
 const TOKEN_REWARDS_KEY = 'fanflux_token_rewards';
+const COMMUNITIES_KEY = 'fanflux_communities';
 
 // Helper functions
 const getUsers = (): User[] => {
@@ -70,6 +81,11 @@ const getTokenRewards = (): TokenReward[] => {
   return rewards ? JSON.parse(rewards) : [];
 };
 
+const getCommunities = (): Community[] => {
+  const communities = localStorage.getItem(COMMUNITIES_KEY);
+  return communities ? JSON.parse(communities) : [];
+};
+
 const saveUsers = (users: User[]) => {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 };
@@ -80,6 +96,10 @@ const savePosts = (posts: Post[]) => {
 
 const saveTokenRewards = (rewards: TokenReward[]) => {
   localStorage.setItem(TOKEN_REWARDS_KEY, JSON.stringify(rewards));
+};
+
+const saveCommunities = (communities: Community[]) => {
+  localStorage.setItem(COMMUNITIES_KEY, JSON.stringify(communities));
 };
 
 // User API
@@ -239,13 +259,14 @@ export const postsApi = {
 // Token API
 export const tokenApi = {
   // Create a new token reward
-  createTokenReward: (creatorAddress: string, data: Omit<TokenReward, 'id' | 'creatorAddress' | 'mintedSupply'>): TokenReward => {
+  createTokenReward: (creatorAddress: string, data: Omit<TokenReward, 'id' | 'creatorAddress' | 'mintedSupply' | 'createdAt'>): TokenReward => {
     const rewards = getTokenRewards();
     const newReward: TokenReward = {
       id: crypto.randomUUID(),
       creatorAddress,
       mintedSupply: 0,
       totalSupply: data.totalSupply,
+      createdAt: new Date().toISOString(),
       rewards: {
         likes: {
           amount: data.rewards.likes?.amount || 0
@@ -341,6 +362,49 @@ export const tokenApi = {
     const user = users.find(u => u.walletAddress === userAddress);
     return user?.tokens || {};
   }
+};
+
+// Community API
+export const communityApi = {
+  // Create a new community
+  createCommunity: (creatorAddress: string, data: Omit<Community, 'id' | 'creatorAddress' | 'createdAt'>): Community => {
+    const communities = getCommunities();
+    const newCommunity: Community = {
+      id: crypto.randomUUID(),
+      creatorAddress,
+      name: data.name,
+      description: data.description,
+      tags: data.tags,
+      createdAt: new Date().toISOString(),
+    };
+    communities.push(newCommunity);
+    saveCommunities(communities);
+    return newCommunity;
+  },
+
+  // Get community by creator address
+  getCreatorCommunity: (creatorAddress: string): Community | null => {
+    const communities = getCommunities();
+    return communities.find(c => c.creatorAddress === creatorAddress) || null;
+  },
+
+  // Update community
+  updateCommunity: (creatorAddress: string, data: Partial<Community>): Community => {
+    const communities = getCommunities();
+    const communityIndex = communities.findIndex(c => c.creatorAddress === creatorAddress);
+    
+    if (communityIndex === -1) {
+      throw new Error('Community not found');
+    }
+
+    communities[communityIndex] = {
+      ...communities[communityIndex],
+      ...data,
+    };
+
+    saveCommunities(communities);
+    return communities[communityIndex];
+  },
 };
 
 // Initialize with some mock data if empty

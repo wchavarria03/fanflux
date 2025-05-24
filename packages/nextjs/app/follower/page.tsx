@@ -21,6 +21,12 @@ export default function FollowerPage() {
     interests: ''
   });
   const [user, setUser] = useState<User | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [tempFormData, setTempFormData] = useState<FollowerProfile>({
+    name: '',
+    bio: '',
+    interests: ''
+  });
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
@@ -42,46 +48,64 @@ export default function FollowerPage() {
           bio: existingUser.bio,
           interests: existingUser.interests?.join(', ') || '',
         });
+        setTempFormData({
+          name: existingUser.name,
+          bio: existingUser.bio,
+          interests: existingUser.interests?.join(', ') || '',
+        });
       }
     }
   }, [isConnected, address]);
+
+  const handleEdit = () => {
+    setTempFormData(formData);
+    setIsEditing(true);
+  };
+
+  const handleCancel = () => {
+    setTempFormData(formData);
+    setIsEditing(false);
+  };
+
+  const handleTempChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setTempFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!address) return;
 
     try {
-      const interests = formData.interests.split(',').map(interest => interest.trim()).filter(Boolean);
+      const interests = tempFormData.interests.split(',').map(interest => interest.trim()).filter(Boolean);
       
       if (user) {
         // Update existing user
         const updatedUser = userApi.updateUser(address, {
-          name: formData.name,
-          bio: formData.bio,
+          name: tempFormData.name,
+          bio: tempFormData.bio,
           interests,
         });
         setUser(updatedUser);
+        setFormData(tempFormData);
       } else {
         // Register new user
         const newUser = userApi.registerUser(address, 'follower', {
-          name: formData.name,
-          bio: formData.bio,
+          name: tempFormData.name,
+          bio: tempFormData.bio,
           interests,
         });
         setUser(newUser);
+        setFormData(tempFormData);
       }
+      setIsEditing(false);
     } catch (error) {
       console.error('Error saving profile:', error);
       // TODO: Add error handling UI
     }
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
   };
 
   if (isLoading) {
@@ -102,63 +126,104 @@ export default function FollowerPage() {
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Profile Information Form */}
-        <div className="bg-base-100 rounded-3xl border border-gradient p-8">
-          <h2 className="text-2xl font-semibold mb-6">Your Profile</h2>
+        <div className="bg-base-100 rounded-3xl border border-gradient p-8 h-fit">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-semibold">Your Profile</h2>
+            {user && !isEditing && (
+              <button
+                onClick={handleEdit}
+                className="text-blue-600 hover:text-blue-700 font-medium"
+              >
+                Edit Profile
+              </button>
+            )}
+          </div>
+          
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                 Display Name
               </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter your display name"
-                required
-              />
+              {isEditing ? (
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={tempFormData.name}
+                  onChange={handleTempChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter your display name"
+                  required
+                />
+              ) : (
+                <p className="text-lg text-base-content">{formData.name}</p>
+              )}
             </div>
 
             <div>
               <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
                 Bio
               </label>
-              <textarea
-                id="bio"
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-                rows={4}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Tell us about yourself"
-                required
-              />
+              {isEditing ? (
+                <textarea
+                  id="bio"
+                  name="bio"
+                  value={tempFormData.bio}
+                  onChange={handleTempChange}
+                  rows={4}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Tell us about yourself"
+                  required
+                />
+              ) : (
+                <p className="text-lg text-base-content whitespace-pre-wrap">{formData.bio}</p>
+              )}
             </div>
 
             <div>
               <label htmlFor="interests" className="block text-sm font-medium text-gray-700 mb-2">
-                Interests (comma-separated)
+                Interests
               </label>
-              <input
-                type="text"
-                id="interests"
-                name="interests"
-                value={formData.interests}
-                onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="e.g., art, music, technology"
-                required
-              />
+              {isEditing ? (
+                <input
+                  type="text"
+                  id="interests"
+                  name="interests"
+                  value={tempFormData.interests}
+                  onChange={handleTempChange}
+                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="e.g., art, music, technology"
+                  required
+                />
+              ) : (
+                <p className="text-lg text-base-content">{formData.interests}</p>
+              )}
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
-            >
-              {user ? 'Update Profile' : 'Save Profile'}
-            </button>
+            {isEditing ? (
+              <div className="flex space-x-4">
+                <button
+                  type="submit"
+                  className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                >
+                  Save Changes
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            ) : !user && (
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              >
+                Save Profile
+              </button>
+            )}
           </form>
         </div>
 
