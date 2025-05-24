@@ -3,6 +3,7 @@
 import { useAccount } from "@starknet-react/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { userApi, User, tokenApi, TokenReward } from "../../services/fakeApi";
 
 interface CommunityForm {
   name: string;
@@ -10,8 +11,21 @@ interface CommunityForm {
   tags: string;
 }
 
+interface TokenRewardForm {
+  likeReward: {
+    amount: number;
+  };
+  commentReward: {
+    amount: number;
+  };
+}
+
+interface TokenGenerationForm {
+  amount: number;
+}
+
 export default function CreatorPage() {
-  const { isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting, address } = useAccount();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<CommunityForm>({
@@ -19,22 +33,105 @@ export default function CreatorPage() {
     description: '',
     tags: ''
   });
+  const [tokenFormData, setTokenFormData] = useState<TokenRewardForm>({
+    likeReward: {
+      amount: 1
+    },
+    commentReward: {
+      amount: 5
+    }
+  });
+  const [tokenGenerationData, setTokenGenerationData] = useState<TokenGenerationForm>({
+    amount: 1000
+  });
+  const [user, setUser] = useState<User | null>(null);
+  const [tokenRewards, setTokenRewards] = useState<TokenReward[]>([]);
 
   useEffect(() => {
-    // Only redirect if we're sure the wallet is not connected
     if (!isConnecting && !isConnected) {
-    // TODO: Fix this redirect
-    //   router.push('/');
+      // TODO: Fix this redirect
+      // router.push('/');
     }
     if (!isConnecting) {
       setIsLoading(false);
     }
   }, [isConnected, isConnecting, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isConnected && address) {
+      const existingUser = userApi.getUser(address);
+      if (existingUser) {
+        setUser(existingUser);
+        setFormData({
+          name: existingUser.name,
+          description: existingUser.bio,
+          tags: existingUser.tags?.join(', ') || '',
+        });
+      }
+      // Load token rewards
+      const rewards = tokenApi.getCreatorTokenRewards(address);
+      setTokenRewards(rewards);
+    }
+  }, [isConnected, address]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Handle form submission
-    console.log('Form submitted:', formData);
+    if (!address) return;
+
+    try {
+      const tags = formData.tags.split(',').map(tag => tag.trim()).filter(Boolean);
+      
+      if (user) {
+        // Update existing user
+        const updatedUser = userApi.updateUser(address, {
+          name: formData.name,
+          bio: formData.description,
+          tags,
+        });
+        setUser(updatedUser);
+      } else {
+        // Register new user
+        const newUser = userApi.registerUser(address, 'creator', {
+          name: formData.name,
+          bio: formData.description,
+          tags,
+        });
+        setUser(newUser);
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      // TODO: Add error handling UI
+    }
+  };
+
+  const handleTokenSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!address) return;
+
+    try {
+      const newReward = tokenApi.createTokenReward(address, {
+        totalSupply: tokenGenerationData.amount,
+        rewards: {
+          likes: tokenFormData.likeReward,
+          comments: tokenFormData.commentReward
+        }
+      });
+      setTokenRewards(prev => [...prev, newReward]);
+      setTokenFormData({
+        likeReward: {
+          amount: 1
+        },
+        commentReward: {
+          amount: 5
+        }
+      });
+      setTokenGenerationData({
+        amount: 1000
+      });
+    } catch (error) {
+      console.error('Error creating token reward:', error);
+      // TODO: Add error handling UI
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -45,10 +142,38 @@ export default function CreatorPage() {
     }));
   };
 
+  const handleTokenChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    if (name.startsWith('likeReward.') || name.startsWith('commentReward.')) {
+      const [rewardType, field] = name.split('.');
+      setTokenFormData(prev => ({
+        ...prev,
+        [rewardType]: {
+          ...prev[rewardType as 'likeReward' | 'commentReward'],
+          [field]: parseInt(value) || 0
+        }
+      }));
+    } else {
+      setTokenFormData(prev => ({
+        ...prev,
+        [name]: name === 'totalSupply' ? parseInt(value) || 0 : value
+      }));
+    }
+  };
+
+  const handleTokenGenerationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setTokenGenerationData(prev => ({
+      ...prev,
+      amount: parseInt(value) || 0
+    }));
+  };
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -59,15 +184,15 @@ export default function CreatorPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8">Creator Portal</h1>
+      <h1 className="text-4xl font-bold mb-8 text-base-content">Creator Portal</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Community Information Form */}
-        <div className="bg-base-100 rounded-3xl border border-gradient p-8">
-          <h2 className="text-2xl font-semibold mb-6">Community Information</h2>
+        <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
+          <h2 className="text-2xl font-semibold mb-6 text-base-content">Community Information</h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="name" className="block text-sm font-medium text-base-content mb-2">
                 Community Name
               </label>
               <input
@@ -76,14 +201,14 @@ export default function CreatorPage() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Enter your community name"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="description" className="block text-sm font-medium text-base-content mb-2">
                 Description
               </label>
               <textarea
@@ -92,14 +217,14 @@ export default function CreatorPage() {
                 value={formData.description}
                 onChange={handleChange}
                 rows={4}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="Describe your community"
                 required
               />
             </div>
 
             <div>
-              <label htmlFor="tags" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="tags" className="block text-sm font-medium text-base-content mb-2">
                 Tags (comma-separated)
               </label>
               <input
@@ -108,7 +233,7 @@ export default function CreatorPage() {
                 name="tags"
                 value={formData.tags}
                 onChange={handleChange}
-                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
                 placeholder="e.g., art, music, technology"
                 required
               />
@@ -116,45 +241,107 @@ export default function CreatorPage() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
             >
-              Create Community
+              {user ? 'Update Profile' : 'Create Community'}
             </button>
           </form>
         </div>
 
-        {/* Getting Started Guide */}
+        {/* Token Settings and Generation */}
         <div className="space-y-6">
-          <div className="bg-base-100 rounded-3xl border border-gradient p-8">
-            <h2 className="text-2xl font-semibold mb-4">Getting Started</h2>
+          <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
+            <h2 className="text-2xl font-semibold mb-6 text-base-content">Token Settings</h2>
+            <form onSubmit={handleTokenSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-base-content">Like Rewards</h3>
+                <div>
+                  <label htmlFor="likeAmount" className="block text-sm font-medium text-base-content mb-2">
+                    Tokens per Like
+                  </label>
+                  <input
+                    type="number"
+                    id="likeAmount"
+                    name="likeReward.amount"
+                    value={tokenFormData.likeReward.amount}
+                    onChange={handleTokenChange}
+                    min="0"
+                    className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-base-content">Comment Rewards</h3>
+                <div>
+                  <label htmlFor="commentAmount" className="block text-sm font-medium text-base-content mb-2">
+                    Tokens per Comment
+                  </label>
+                  <input
+                    type="number"
+                    id="commentAmount"
+                    name="commentReward.amount"
+                    value={tokenFormData.commentReward.amount}
+                    onChange={handleTokenChange}
+                    min="0"
+                    className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium text-base-content">Generate New Tokens</h3>
+                <div>
+                  <label htmlFor="tokenAmount" className="block text-sm font-medium text-base-content mb-2">
+                    Amount to Generate
+                  </label>
+                  <input
+                    type="number"
+                    id="tokenAmount"
+                    name="amount"
+                    value={tokenGenerationData.amount}
+                    onChange={handleTokenGenerationChange}
+                    min="1"
+                    className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
+              >
+                Generate Tokens
+              </button>
+            </form>
+          </div>
+
+          {/* Token Tracking */}
+          <div className="bg-base-100 rounded-3xl border border-base-300 p-8">
+            <h3 className="text-xl font-semibold mb-4 text-base-content">Token Distribution</h3>
             <div className="space-y-4">
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-600 font-semibold">1</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold">Complete your profile</h3>
-                  <p className="text-gray-600">Fill in your community information to get started</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-600 font-semibold">2</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold">Set up subscription tiers</h3>
-                  <p className="text-gray-600">Create different levels of access for your community</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                  <span className="text-blue-600 font-semibold">3</span>
-                </div>
-                <div>
-                  <h3 className="font-semibold">Create your first post</h3>
-                  <p className="text-gray-600">Start sharing content with your community</p>
-                </div>
-              </div>
+              {tokenRewards.length > 0 ? (
+                tokenRewards.map((reward) => (
+                  <div key={reward.id} className="bg-base-200 rounded-lg p-4">
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-base-content/70">Total Supply: {reward.totalSupply}</p>
+                        <p className="text-base-content/70">Minted: {reward.mintedSupply}</p>
+                        <p className="text-base-content/70">Remaining: {reward.totalSupply - reward.mintedSupply}</p>
+                      </div>
+                      <div>
+                        <p className="text-base-content/70">Likes: {reward.rewards.likes.amount} tokens</p>
+                        <p className="text-base-content/70">Comments: {reward.rewards.comments.amount} tokens</p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-base-content/70 text-center">No tokens generated yet</p>
+              )}
             </div>
           </div>
         </div>

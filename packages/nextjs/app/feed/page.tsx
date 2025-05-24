@@ -2,62 +2,98 @@
 
 import { useAccount } from "@starknet-react/core";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, SetStateAction } from "react";
 import Post from "../../components/Post";
+import { postsApi, userApi, Post as PostType, Comment as CommentType } from "../../services/fakeApi";
 
-// Mock data for demonstration
-const mockPosts = [
-  {
-    id: '1',
-    creator: {
-      name: 'Alice',
-      avatar: '',
-    },
-    content: 'Just launched my new NFT collection! Check it out and let me know what you think.',
-    timestamp: new Date().toISOString(),
-    likes: 42,
-    comments: [
-      {
-        id: '1',
-        user: 'Bob',
-        content: 'Looks amazing! Can\'t wait to see more.',
-        timestamp: new Date().toISOString(),
-      },
-    ],
-  },
-  {
-    id: '2',
-    creator: {
-      name: 'Charlie',
-      avatar: '',
-    },
-    content: 'Working on some exciting new content for my subscribers. Stay tuned!',
-    timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-    likes: 28,
-    comments: [],
-  },
-];
+interface EnrichedPost extends Omit<PostType, 'timestamp' | 'comments' | 'creator'> {
+  timestamp: number;
+  comments: EnrichedComment[];
+  creator: {
+    name: string;
+    avatar?: string;
+  };
+}
+
+interface EnrichedComment extends Omit<CommentType, 'timestamp'> {
+  timestamp: number;
+  userName?: string;
+}
 
 export default function FeedPage() {
-  const { isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting, address } = useAccount();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [posts, setPosts] = useState(mockPosts);
+  const [posts, setPosts] = useState<EnrichedPost[]>([]);
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
-        // TODO: Fix this redirect
-        // router.push('/');
+      // TODO: Fix this redirect
+      // router.push('/');
     }
     if (!isConnecting) {
       setIsLoading(false);
     }
   }, [isConnected, isConnecting, router]);
 
+  useEffect(() => {
+    if (isConnected && address) {
+      // Get all posts and enrich them with creator information
+      const allPosts = postsApi.getPosts();
+      const enrichedPosts: EnrichedPost[] = allPosts.map(post => {
+        const creator = userApi.getUser(post.creatorAddress);
+        const enrichedComments: EnrichedComment[] = post.comments.map(comment => {
+          const commentUser = userApi.getUser(comment.userAddress);
+          return {
+            id: comment.id,
+            postId: comment.postId,
+            userAddress: comment.userAddress,
+            content: comment.content,
+            timestamp: new Date(comment.timestamp).getTime(),
+            userName: commentUser?.name || 'Unknown User'
+          };
+        });
+
+        const enrichedPost: EnrichedPost = {
+          id: post.id,
+          creatorAddress: post.creatorAddress,
+          content: post.content,
+          likes: post.likes,
+          creator: {
+            name: creator?.name || 'Unknown Creator'
+          },
+          timestamp: new Date(post.timestamp).getTime(),
+          comments: enrichedComments
+        };
+
+        return enrichedPost;
+      });
+      setPosts(enrichedPosts);
+    }
+  }, [isConnected, address]);
+
+  const handleLike = (postId: string) => {
+    if (!address) return;
+    const updatedPost = postsApi.toggleLike(postId, address);
+    setPosts(prev => prev.map(p => p.id === postId ? {
+      ...p,
+      likes: updatedPost.likes,
+    } : p));
+  };
+
+  const handleComment = (postId: string, content: string) => {
+    if (!address) return;
+    const comment = postsApi.addComment(postId, address, content);
+    setPosts(prev => prev.map(p => p.id === postId ? {
+      ...p,
+      comments: [...p.comments, comment],
+    } : p));
+  };
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
       </div>
     );
   }
@@ -69,7 +105,7 @@ export default function FeedPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Your Feed</h1>
+        <h1 className="text-4xl font-bold mb-8 text-base-content">Your Feed</h1>
         
         {/* Feed Content */}
         <div className="space-y-6">
@@ -88,9 +124,9 @@ export default function FeedPage() {
 
         {/* No Posts Message */}
         {posts.length === 0 && (
-          <div className="bg-base-100 rounded-3xl border border-gradient p-8 text-center">
-            <h2 className="text-2xl font-semibold mb-4">No Posts Yet</h2>
-            <p className="text-gray-600">
+          <div className="bg-base-100 rounded-3xl border border-base-300 p-8 text-center">
+            <h2 className="text-2xl font-semibold mb-4 text-base-content">No Posts Yet</h2>
+            <p className="text-base-content/70">
               Follow some creators to see their posts here!
             </p>
           </div>

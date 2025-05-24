@@ -3,6 +3,7 @@
 import { useAccount } from "@starknet-react/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { userApi, User } from "../../services/fakeApi";
 
 interface FollowerProfile {
   name: string;
@@ -11,7 +12,7 @@ interface FollowerProfile {
 }
 
 export default function FollowerPage() {
-  const { isConnected, isConnecting } = useAccount();
+  const { isConnected, isConnecting, address } = useAccount();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<FollowerProfile>({
@@ -19,22 +20,60 @@ export default function FollowerPage() {
     bio: '',
     interests: ''
   });
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Only redirect if we're sure the wallet is not connected
     if (!isConnecting && !isConnected) {
-        // TODO: Fix this redirect
-        //   router.push('/');
+      // TODO: Fix this redirect
+      // router.push('/');
     }
     if (!isConnecting) {
       setIsLoading(false);
     }
   }, [isConnected, isConnecting, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (isConnected && address) {
+      const existingUser = userApi.getUser(address);
+      if (existingUser) {
+        setUser(existingUser);
+        setFormData({
+          name: existingUser.name,
+          bio: existingUser.bio,
+          interests: existingUser.interests?.join(', ') || '',
+        });
+      }
+    }
+  }, [isConnected, address]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Handle form submission
-    console.log('Form submitted:', formData);
+    if (!address) return;
+
+    try {
+      const interests = formData.interests.split(',').map(interest => interest.trim()).filter(Boolean);
+      
+      if (user) {
+        // Update existing user
+        const updatedUser = userApi.updateUser(address, {
+          name: formData.name,
+          bio: formData.bio,
+          interests,
+        });
+        setUser(updatedUser);
+      } else {
+        // Register new user
+        const newUser = userApi.registerUser(address, 'follower', {
+          name: formData.name,
+          bio: formData.bio,
+          interests,
+        });
+        setUser(newUser);
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      // TODO: Add error handling UI
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -118,7 +157,7 @@ export default function FollowerPage() {
               type="submit"
               className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
             >
-              Save Profile
+              {user ? 'Update Profile' : 'Save Profile'}
             </button>
           </form>
         </div>
@@ -162,18 +201,20 @@ export default function FollowerPage() {
           <div className="bg-base-100 rounded-3xl border border-gradient p-8">
             <h2 className="text-2xl font-semibold mb-4">Recommended Creators</h2>
             <div className="grid grid-cols-1 gap-4">
-              <div className="border rounded-lg p-4 hover:shadow-md transition-shadow">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                  <div>
-                    <h3 className="font-semibold">Creator Name</h3>
-                    <p className="text-sm text-gray-600">Category</p>
+              {userApi.getCreators().map((creator) => (
+                <div key={creator.walletAddress} className="border rounded-lg p-4 hover:shadow-md transition-shadow">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                    <div>
+                      <h3 className="font-semibold">{creator.name}</h3>
+                      <p className="text-sm text-gray-600">{creator.tags?.join(', ')}</p>
+                    </div>
                   </div>
+                  <button className="mt-4 w-full bg-gray-100 text-gray-700 py-2 px-4 rounded hover:bg-gray-200 transition-colors">
+                    View Profile
+                  </button>
                 </div>
-                <button className="mt-4 w-full bg-gray-100 text-gray-700 py-2 px-4 rounded hover:bg-gray-200 transition-colors">
-                  View Profile
-                </button>
-              </div>
+              ))}
             </div>
           </div>
         </div>
