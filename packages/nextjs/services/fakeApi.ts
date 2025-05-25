@@ -70,6 +70,7 @@ export interface Article {
   price: number;
   createdAt: string;
   creatorAddress: string;
+  imageUrl: string;
 }
 
 // Storage keys
@@ -629,6 +630,7 @@ export const marketplaceApi = {
 const initializeMockData = () => {
   const users = getUsers();
   const posts = getPosts();
+  const articles = getArticles();
 
   if (users.length === 0) {
     const mockUsers: User[] = [];
@@ -774,6 +776,100 @@ const initializeMockData = () => {
       },
     ];
     savePosts(mockPosts);
+  }
+
+  if (articles.length === 0) {
+    const mockArticles: Article[] = [
+      {
+        id: "1",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Exclusive NFT Collection",
+        description: "Get access to our exclusive NFT collection featuring unique digital art pieces.",
+        content: "Full content here...",
+        price: 100,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/nft1/400/400"
+      },
+      {
+        id: "2",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Premium Workshop Access",
+        description: "Access to our premium workshop series on digital art creation.",
+        content: "Full content here...",
+        price: 250,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/workshop1/400/400"
+      },
+      {
+        id: "3",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Digital Art Masterclass",
+        description: "Learn advanced techniques in digital art creation.",
+        content: "Full content here...",
+        price: 150,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/masterclass1/400/400"
+      },
+      {
+        id: "4",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Community Membership",
+        description: "Get exclusive access to our community events and discussions.",
+        content: "Full content here...",
+        price: 75,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/membership1/400/400"
+      },
+      {
+        id: "5",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Art Tools Bundle",
+        description: "Premium digital art tools and resources bundle.",
+        content: "Full content here...",
+        price: 200,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/tools1/400/400"
+      },
+      {
+        id: "6",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "One-on-One Mentoring",
+        description: "Personal mentoring session with our expert artists.",
+        content: "Full content here...",
+        price: 300,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/mentoring1/400/400"
+      },
+      {
+        id: "7",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Art Portfolio Review",
+        description: "Professional review of your art portfolio.",
+        content: "Full content here...",
+        price: 125,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/portfolio1/400/400"
+      },
+      {
+        id: "8",
+        communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+        title: "Digital Art Templates",
+        description: "Collection of premium digital art templates.",
+        content: "Full content here...",
+        price: 50,
+        createdAt: new Date().toISOString(),
+        creatorAddress: "0x123",
+        imageUrl: "https://picsum.photos/seed/templates1/400/400"
+      }
+    ];
+    saveArticles(mockArticles);
   }
 };
 
