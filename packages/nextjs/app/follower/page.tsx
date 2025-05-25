@@ -159,7 +159,7 @@ export default function FollowerPage() {
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-base-content/70 mb-2"
               >
                 Display Name
               </label>
@@ -170,7 +170,7 @@ export default function FollowerPage() {
                   name="name"
                   value={tempFormData.name}
                   onChange={handleTempChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Enter your display name"
                   required
                 />
@@ -182,7 +182,7 @@ export default function FollowerPage() {
             <div>
               <label
                 htmlFor="bio"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-base-content/70 mb-2"
               >
                 Bio
               </label>
@@ -193,12 +193,12 @@ export default function FollowerPage() {
                   value={tempFormData.bio}
                   onChange={handleTempChange}
                   rows={4}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="Tell us about yourself"
                   required
                 />
               ) : (
-                <p className="text-lg text-base-content whitespace-pre-wrap">
+                <p className="text-base-content whitespace-pre-wrap">
                   {formData.bio}
                 </p>
               )}
@@ -207,7 +207,7 @@ export default function FollowerPage() {
             <div>
               <label
                 htmlFor="interests"
-                className="block text-sm font-medium text-gray-700 mb-2"
+                className="block text-sm font-medium text-base-content/70 mb-2"
               >
                 Interests
               </label>
@@ -218,12 +218,12 @@ export default function FollowerPage() {
                   name="interests"
                   value={tempFormData.interests}
                   onChange={handleTempChange}
-                  className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 rounded-lg border border-base-300 bg-base-100 text-base-content focus:ring-2 focus:ring-primary focus:border-transparent"
                   placeholder="e.g., art, music, technology"
                   required
                 />
               ) : (
-                <p className="text-lg text-base-content">
+                <p className="text-base-content">
                   {formData.interests}
                 </p>
               )}
@@ -233,14 +233,14 @@ export default function FollowerPage() {
               <div className="flex space-x-4">
                 <button
                   type="submit"
-                  className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                  className="flex-1 bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
                 >
                   Save Changes
                 </button>
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="flex-1 bg-gray-200 text-gray-700 py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors font-semibold"
+                  className="flex-1 bg-base-200 text-base-content py-3 px-6 rounded-lg hover:bg-base-300 transition-colors font-semibold"
                 >
                   Cancel
                 </button>
@@ -249,7 +249,7 @@ export default function FollowerPage() {
               !user && (
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                  className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
                 >
                   Save Profile
                 </button>
