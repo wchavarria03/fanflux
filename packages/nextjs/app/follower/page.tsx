@@ -223,9 +223,7 @@ export default function FollowerPage() {
                   required
                 />
               ) : (
-                <p className="text-base-content">
-                  {formData.interests}
-                </p>
+                <p className="text-base-content">{formData.interests}</p>
               )}
             </div>
 
