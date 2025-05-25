@@ -1,12 +1,12 @@
-import { Cog8ToothIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
+import { BugAntIcon, Cog8ToothIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { FaucetButton } from "~~/components/scaffold-stark/FaucetButton";
+import { FaucetSepolia } from "~~/components/scaffold-stark/FaucetSepolia";
+import { BlockExplorer } from "~~/components/scaffold-stark/BlockExplorer";
+import { BlockExplorerSepolia } from "~~/components/scaffold-stark/BlockExplorerSepolia";
 import { useTargetNetwork } from "~~/hooks/scaffold-stark/useTargetNetwork";
 import { useGlobalState } from "~~/services/store/store";
-import { devnet, sepolia, mainnet } from "@starknet-react/chains";
-import { Faucet } from "~~/components/scaffold-stark/Faucet";
-import { FaucetSepolia } from "~~/components/scaffold-stark/FaucetSepolia";
-import { BlockExplorerSepolia } from "./scaffold-stark/BlockExplorerSepolia";
-import { BlockExplorer } from "./scaffold-stark/BlockExplorer";
-import Link from "next/link";
+import { getTargetNetworks } from "~~/utils/scaffold-stark";
 
 /**
  * Site footer
@@ -16,16 +16,9 @@ export const Footer = () => {
     (state) => state.nativeCurrencyPrice,
   );
   const { targetNetwork } = useTargetNetwork();
-
-  // NOTE: workaround - check by name also since in starknet react devnet and sepolia has the same chainId
-  const isLocalNetwork =
-    targetNetwork.id === devnet.id && targetNetwork.network === devnet.network;
-  const isSepoliaNetwork =
-    targetNetwork.id === sepolia.id &&
-    targetNetwork.network === sepolia.network;
-  const isMainnetNetwork =
-    targetNetwork.id === mainnet.id &&
-    targetNetwork.network === mainnet.network;
+  const isLocalNetwork = targetNetwork.id === getTargetNetworks()[0].id;
+  const isSepoliaNetwork = targetNetwork.id === BigInt(5);
+  const isMainnetNetwork = targetNetwork.id === BigInt(1);
 
   return (
     <div className="min-h-0 py-5 px-1 mb-11 lg:mb-0 bg-base-100">
@@ -40,7 +33,7 @@ export const Footer = () => {
             )}
             {isLocalNetwork && (
               <>
-                <Faucet />
+                <FaucetButton />
               </>
             )}
             {isMainnetNetwork && (
@@ -55,6 +48,14 @@ export const Footer = () => {
             >
               <Cog8ToothIcon className="h-4 w-4 text-[#32BAC4]" />
               <span>Configure Contracts</span>
+            </Link>
+            <Link
+              href={"/debug"}
+              passHref
+              className="btn btn-sm font-normal gap-1 cursor-pointer border border-[#32BAC4] shadow-none"
+            >
+              <BugAntIcon className="h-4 w-4 text-[#32BAC4]" />
+              <span>Debug Contracts</span>
             </Link>
             {nativeCurrencyPrice > 0 && (
               <div>
@@ -71,19 +72,21 @@ export const Footer = () => {
         <ul className="menu menu-horizontal w-full">
           <div className="flex justify-center items-center gap-2 text-sm w-full">
             <div className="text-center">
+              <span className="text-base-content/60">Powered by FanFlux</span>
+            </div>
+            <div className="text-center">
               <a
-                href="https://github.com/Scaffold-Stark/scaffold-stark-2"
+                href="https://github.com/fanflux"
                 target="_blank"
                 rel="noreferrer"
                 className="link"
               >
-                Fork me
+                GitHub
               </a>
             </div>
-
             <div className="text-center">
               <a
-                href="https://t.me/+wO3PtlRAreo4MDI9"
+                href="https://t.me/fanflux"
                 target="_blank"
                 rel="noreferrer"
                 className="link"

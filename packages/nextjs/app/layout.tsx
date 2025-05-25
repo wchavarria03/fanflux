@@ -4,9 +4,11 @@ import "~~/styles/globals.css";
 import { ThemeProvider } from "~~/components/ThemeProvider";
 
 export const metadata: Metadata = {
-  title: "Scaffold-Stark",
-  description: "Fast track your starknet journey",
-  icons: "/logo.ico",
+  title: "FanFlux",
+  description: "Connect with creators, earn tokens, and unlock exclusive content",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 const ScaffoldStarkApp = ({ children }: { children: React.ReactNode }) => {
