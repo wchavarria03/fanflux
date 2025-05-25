@@ -93,7 +93,7 @@ export default function CreatorPage() {
         setFormData({
           name: existingCommunity.name,
           description: existingCommunity.description,
-          tags: existingCommunity.tags.join(", "),
+          tags: existingCommunity.tags?.join(", ") || "",
         });
       }
 
@@ -118,6 +118,15 @@ export default function CreatorPage() {
         .map((tag) => tag.trim())
         .filter(Boolean);
 
+      // Create new community first
+      const newCommunity = communityApi.createCommunity(address, {
+        name: formData.name,
+        description: formData.description,
+        tags,
+      });
+      setCommunity(newCommunity);
+
+      // Then register or update user
       if (user) {
         // Update existing user
         const updatedUser = userApi.updateUser(address, {
@@ -126,34 +135,17 @@ export default function CreatorPage() {
           tags,
         });
         setUser(updatedUser);
-
-        // Update community
-        if (community) {
-          const updatedCommunity = communityApi.updateCommunity(address, {
-            name: formData.name,
-            description: formData.description,
-            tags,
-          });
-          setCommunity(updatedCommunity);
-        }
       } else {
-        // Register new user
+        // Register new user with creator role
         const newUser = userApi.registerUser(address, "creator", {
           name: formData.name,
           bio: formData.description,
           tags,
         });
         setUser(newUser);
-
-        // Create new community
-        const newCommunity = communityApi.createCommunity(address, {
-          name: formData.name,
-          description: formData.description,
-          tags,
-        });
-        setCommunity(newCommunity);
-        setIsNewCreator(false);
       }
+
+      setIsNewCreator(false);
     } catch (error) {
       console.error("Error saving profile:", error);
       // TODO: Add error handling UI

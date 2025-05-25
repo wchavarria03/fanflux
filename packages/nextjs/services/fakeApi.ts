@@ -258,12 +258,10 @@ export const postsApi = {
     const posts = getPosts();
     const users = getUsers();
 
-    // Verify creator exists
-    const creator = users.find(
-      (u) => u.walletAddress === creatorAddress && u.role === "creator",
-    );
-    if (!creator) {
-      throw new Error("Creator not found");
+    // Verify user exists
+    const user = users.find((u) => u.walletAddress === creatorAddress);
+    if (!user) {
+      throw new Error("User not found");
     }
 
     const newPost: Post = {
@@ -631,6 +629,7 @@ const initializeMockData = () => {
   const users = getUsers();
   const posts = getPosts();
   const articles = getArticles();
+  const communities = getCommunities();
 
   if (users.length === 0) {
     const mockUsers: User[] = [];
@@ -873,6 +872,11 @@ const initializeMockData = () => {
       },
     ];
     saveArticles(mockArticles);
+  }
+
+  if (communities.length === 0) {
+    const mockCommunities: Community[] = [];
+    saveCommunities(mockCommunities);
   }
 };
 
