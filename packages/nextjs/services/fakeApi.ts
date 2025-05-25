@@ -784,23 +784,25 @@ const initializeMockData = () => {
         id: "1",
         communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
         title: "Exclusive NFT Collection",
-        description: "Get access to our exclusive NFT collection featuring unique digital art pieces.",
+        description:
+          "Get access to our exclusive NFT collection featuring unique digital art pieces.",
         content: "Full content here...",
         price: 100,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/nft1/400/400"
+        imageUrl: "https://picsum.photos/seed/nft1/400/400",
       },
       {
         id: "2",
         communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
         title: "Premium Workshop Access",
-        description: "Access to our premium workshop series on digital art creation.",
+        description:
+          "Access to our premium workshop series on digital art creation.",
         content: "Full content here...",
         price: 250,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/workshop1/400/400"
+        imageUrl: "https://picsum.photos/seed/workshop1/400/400",
       },
       {
         id: "3",
@@ -811,18 +813,19 @@ const initializeMockData = () => {
         price: 150,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/masterclass1/400/400"
+        imageUrl: "https://picsum.photos/seed/masterclass1/400/400",
       },
       {
         id: "4",
         communityId: "a83fde87-b5b2-415f-8a6b-39f861792e2f",
         title: "Community Membership",
-        description: "Get exclusive access to our community events and discussions.",
+        description:
+          "Get exclusive access to our community events and discussions.",
         content: "Full content here...",
         price: 75,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/membership1/400/400"
+        imageUrl: "https://picsum.photos/seed/membership1/400/400",
       },
       {
         id: "5",
@@ -833,7 +836,7 @@ const initializeMockData = () => {
         price: 200,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/tools1/400/400"
+        imageUrl: "https://picsum.photos/seed/tools1/400/400",
       },
       {
         id: "6",
@@ -844,7 +847,7 @@ const initializeMockData = () => {
         price: 300,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/mentoring1/400/400"
+        imageUrl: "https://picsum.photos/seed/mentoring1/400/400",
       },
       {
         id: "7",
@@ -855,7 +858,7 @@ const initializeMockData = () => {
         price: 125,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/portfolio1/400/400"
+        imageUrl: "https://picsum.photos/seed/portfolio1/400/400",
       },
       {
         id: "8",
@@ -866,8 +869,8 @@ const initializeMockData = () => {
         price: 50,
         createdAt: new Date().toISOString(),
         creatorAddress: "0x123",
-        imageUrl: "https://picsum.photos/seed/templates1/400/400"
-      }
+        imageUrl: "https://picsum.photos/seed/templates1/400/400",
+      },
     ];
     saveArticles(mockArticles);
   }

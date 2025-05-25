@@ -145,11 +145,15 @@ export default function CommunityPage() {
                     {creator.name.charAt(0)}
                   </div>
                   <div className="flex-grow">
-                    <h3 className="font-semibold text-lg mb-2">{creator.name}</h3>
+                    <h3 className="font-semibold text-lg mb-2">
+                      {creator.name}
+                    </h3>
                     <p className="text-base-content/70 mb-4">{creator.bio}</p>
                     {creator.interests && creator.interests.length > 0 && (
                       <div>
-                        <h4 className="font-medium mb-2 text-base-content/70">Interests</h4>
+                        <h4 className="font-medium mb-2 text-base-content/70">
+                          Interests
+                        </h4>
                         <div className="flex flex-wrap gap-2">
                           {creator.interests.map((interest, index) => (
                             <span
@@ -193,7 +197,9 @@ export default function CommunityPage() {
                   />
                 </svg>
                 <span className="text-base-content/80">Balance:</span>
-                <span className="text-xl font-bold text-primary-focus">{userTokens}</span>
+                <span className="text-xl font-bold text-primary-focus">
+                  {userTokens}
+                </span>
                 <span className="text-base-content/80">tokens</span>
               </div>
             )}
@@ -207,7 +213,10 @@ export default function CommunityPage() {
               >
                 <div className="aspect-square relative">
                   <img
-                    src={article.imageUrl || `https://picsum.photos/seed/${article.id}/400/400`}
+                    src={
+                      article.imageUrl ||
+                      `https://picsum.photos/seed/${article.id}/400/400`
+                    }
                     alt={article.title}
                     className="w-full h-full object-cover"
                   />
@@ -235,7 +244,9 @@ export default function CommunityPage() {
                           d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span className="text-lg font-semibold text-primary">{article.price} tokens</span>
+                      <span className="text-lg font-semibold text-primary">
+                        {article.price} tokens
+                      </span>
                     </div>
                     <button
                       onClick={() => handlePurchase(article.id)}
