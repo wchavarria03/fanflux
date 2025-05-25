@@ -1,4 +1,8 @@
-import { BugAntIcon, Cog8ToothIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
+import {
+  BugAntIcon,
+  Cog8ToothIcon,
+  CurrencyDollarIcon,
+} from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { FaucetButton } from "~~/components/scaffold-stark/FaucetButton";
 import { FaucetSepolia } from "~~/components/scaffold-stark/FaucetSepolia";

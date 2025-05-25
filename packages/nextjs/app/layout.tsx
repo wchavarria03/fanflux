@@ -5,7 +5,8 @@ import { ThemeProvider } from "~~/components/ThemeProvider";
 
 export const metadata: Metadata = {
   title: "FanFlux",
-  description: "Connect with creators, earn tokens, and unlock exclusive content",
+  description:
+    "Connect with creators, earn tokens, and unlock exclusive content",
   icons: {
     icon: "/logo.svg",
   },
