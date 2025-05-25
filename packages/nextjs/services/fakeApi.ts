@@ -8,15 +8,17 @@ export interface User {
   tags?: string[];
   createdAt: string;
   tokens?: { [creatorAddress: string]: number }; // Map of creator address to token amount
+  subscriptions?: string[]; // Array of community IDs the user is subscribed to
 }
 
 export interface Community {
   id: string;
-  creatorAddress: string;
   name: string;
   description: string;
-  tags: string[];
+  creatorAddress: string;
   createdAt: string;
+  tags?: string[];
+  followers?: string[]; // Array of follower wallet addresses
 }
 
 export interface Comment {
@@ -59,11 +61,23 @@ export interface TokenReward {
   };
 }
 
+export interface Article {
+  id: string;
+  communityId: string;
+  title: string;
+  description: string;
+  content: string;
+  price: number;
+  createdAt: string;
+  creatorAddress: string;
+}
+
 // Storage keys
 const USERS_KEY = "fanflux_users";
 const POSTS_KEY = "fanflux_posts";
 const TOKEN_REWARDS_KEY = "fanflux_token_rewards";
 const COMMUNITIES_KEY = "fanflux_communities";
+const ARTICLES_KEY = "fanflux_articles";
 
 // Helper functions
 const getUsers = (): User[] => {
@@ -86,6 +100,11 @@ const getCommunities = (): Community[] => {
   return communities ? JSON.parse(communities) : [];
 };
 
+const getArticles = (): Article[] => {
+  const articles = localStorage.getItem(ARTICLES_KEY);
+  return articles ? JSON.parse(articles) : [];
+};
+
 const saveUsers = (users: User[]) => {
   localStorage.setItem(USERS_KEY, JSON.stringify(users));
 };
@@ -100,6 +119,10 @@ const saveTokenRewards = (rewards: TokenReward[]) => {
 
 const saveCommunities = (communities: Community[]) => {
   localStorage.setItem(COMMUNITIES_KEY, JSON.stringify(communities));
+};
+
+const saveArticles = (articles: Article[]) => {
+  localStorage.setItem(ARTICLES_KEY, JSON.stringify(articles));
 };
 
 // User API
@@ -168,6 +191,57 @@ export const userApi = {
     const users = getUsers();
     return users.filter((u) => u.role === "follower");
   },
+
+  // Subscribe to a community
+  subscribeToCommunity: (userAddress: string, communityId: string): User => {
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.walletAddress === userAddress);
+    
+    if (userIndex === -1) {
+      throw new Error('User not found');
+    }
+
+    const user = users[userIndex];
+    user.subscriptions = user.subscriptions || [];
+    
+    if (!user.subscriptions.includes(communityId)) {
+      user.subscriptions.push(communityId);
+      saveUsers(users);
+    }
+
+    return user;
+  },
+
+  // Unsubscribe from a community
+  unsubscribeFromCommunity: (userAddress: string, communityId: string): User => {
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.walletAddress === userAddress);
+    
+    if (userIndex === -1) {
+      throw new Error('User not found');
+    }
+
+    const user = users[userIndex];
+    user.subscriptions = user.subscriptions || [];
+    user.subscriptions = user.subscriptions.filter(id => id !== communityId);
+    saveUsers(users);
+
+    return user;
+  },
+
+  // Check if user is subscribed to a community
+  isSubscribedToCommunity: (userAddress: string, communityId: string): boolean => {
+    const users = getUsers();
+    const user = users.find(u => u.walletAddress === userAddress);
+    return user?.subscriptions?.includes(communityId) || false;
+  },
+
+  // Get user's subscribed communities
+  getUserSubscriptions: (userAddress: string): string[] => {
+    const users = getUsers();
+    const user = users.find(u => u.walletAddress === userAddress);
+    return user?.subscriptions || [];
+  }
 };
 
 // Posts API
@@ -403,18 +477,13 @@ export const tokenApi = {
 // Community API
 export const communityApi = {
   // Create a new community
-  createCommunity: (
-    creatorAddress: string,
-    data: Omit<Community, "id" | "creatorAddress" | "createdAt">,
-  ): Community => {
+  createCommunity: (creatorAddress: string, data: Omit<Community, 'id' | 'creatorAddress' | 'createdAt'>): Community => {
     const communities = getCommunities();
     const newCommunity: Community = {
       id: crypto.randomUUID(),
       creatorAddress,
-      name: data.name,
-      description: data.description,
-      tags: data.tags,
       createdAt: new Date().toISOString(),
+      ...data,
     };
     communities.push(newCommunity);
     saveCommunities(communities);
@@ -424,31 +493,114 @@ export const communityApi = {
   // Get community by creator address
   getCreatorCommunity: (creatorAddress: string): Community | null => {
     const communities = getCommunities();
-    return communities.find((c) => c.creatorAddress === creatorAddress) || null;
+    return communities.find(c => c.creatorAddress === creatorAddress) || null;
+  },
+
+  // Get community by ID
+  getCommunity: (id: string): Community | null => {
+    const communities = getCommunities();
+    return communities.find(c => c.id === id) || null;
   },
 
   // Update community
-  updateCommunity: (
-    creatorAddress: string,
-    data: Partial<Community>,
-  ): Community => {
+  updateCommunity: (id: string, data: Partial<Omit<Community, 'id' | 'creatorAddress' | 'createdAt'>>): Community => {
     const communities = getCommunities();
-    const communityIndex = communities.findIndex(
-      (c) => c.creatorAddress === creatorAddress,
-    );
-
-    if (communityIndex === -1) {
-      throw new Error("Community not found");
+    const index = communities.findIndex(c => c.id === id);
+    if (index === -1) {
+      throw new Error('Community not found');
     }
-
-    communities[communityIndex] = {
-      ...communities[communityIndex],
+    communities[index] = {
+      ...communities[index],
       ...data,
     };
-
     saveCommunities(communities);
-    return communities[communityIndex];
+    return communities[index];
   },
+
+  // Delete community
+  deleteCommunity: (id: string): void => {
+    const communities = getCommunities();
+    const filteredCommunities = communities.filter(c => c.id !== id);
+    if (filteredCommunities.length === communities.length) {
+      throw new Error('Community not found');
+    }
+    saveCommunities(filteredCommunities);
+  },
+
+  // Get all communities
+  getAllCommunities: (): Community[] => {
+    return getCommunities();
+  }
+};
+
+// Marketplace API
+export const marketplaceApi = {
+  createArticle: (communityId: string, creatorAddress: string, data: Omit<Article, 'id' | 'communityId' | 'creatorAddress' | 'createdAt'>): Article => {
+    const articles = getArticles();
+    const newArticle: Article = {
+      id: crypto.randomUUID(),
+      communityId,
+      creatorAddress,
+      createdAt: new Date().toISOString(),
+      ...data,
+    };
+    articles.push(newArticle);
+    saveArticles(articles);
+    return newArticle;
+  },
+
+  getCommunityArticles: (communityId: string): Article[] => {
+    const articles = getArticles();
+    return articles.filter(a => a.communityId === communityId);
+  },
+
+  getArticle: (id: string): Article | null => {
+    const articles = getArticles();
+    return articles.find(a => a.id === id) || null;
+  },
+
+  purchaseArticle: (articleId: string, userAddress: string): boolean => {
+    const articles = getArticles();
+    const users = getUsers();
+    
+    const article = articles.find(a => a.id === articleId);
+    if (!article) return false;
+
+    const user = users.find(u => u.walletAddress === userAddress);
+    if (!user || !user.tokens || !user.tokens[article.creatorAddress]) return false;
+
+    const userTokens = user.tokens[article.creatorAddress];
+    if (userTokens < article.price) return false;
+
+    // Deduct tokens
+    user.tokens[article.creatorAddress] -= article.price;
+    saveUsers(users);
+    
+    return true;
+  },
+
+  updateArticle: (id: string, data: Partial<Omit<Article, 'id' | 'communityId' | 'creatorAddress' | 'createdAt'>>): Article => {
+    const articles = getArticles();
+    const index = articles.findIndex(a => a.id === id);
+    if (index === -1) {
+      throw new Error('Article not found');
+    }
+    articles[index] = {
+      ...articles[index],
+      ...data,
+    };
+    saveArticles(articles);
+    return articles[index];
+  },
+
+  deleteArticle: (id: string): void => {
+    const articles = getArticles();
+    const filteredArticles = articles.filter(a => a.id !== id);
+    if (filteredArticles.length === articles.length) {
+      throw new Error('Article not found');
+    }
+    saveArticles(filteredArticles);
+  }
 };
 
 // Initialize with some mock data if empty
@@ -457,40 +609,7 @@ const initializeMockData = () => {
   const posts = getPosts();
 
   if (users.length === 0) {
-    const mockUsers: User[] = [
-      {
-        walletAddress: "0x123",
-        role: "creator",
-        name: "Alice",
-        bio: "Digital artist and NFT creator",
-        tags: ["art", "nft", "digital"],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        walletAddress: "0x456",
-        role: "follower",
-        name: "Bob",
-        bio: "NFT enthusiast",
-        interests: ["art", "collecting"],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        walletAddress: "0x789",
-        role: "creator",
-        name: "Charlie",
-        bio: "Web3 developer and educator",
-        tags: ["web3", "development", "education"],
-        createdAt: new Date().toISOString(),
-      },
-      {
-        walletAddress: "0xabc",
-        role: "follower",
-        name: "Diana",
-        bio: "Crypto investor and tech enthusiast",
-        interests: ["crypto", "web3", "technology"],
-        createdAt: new Date().toISOString(),
-      },
-    ];
+    const mockUsers: User[] = [];
     saveUsers(mockUsers);
   }
 

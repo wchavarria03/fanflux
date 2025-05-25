@@ -3,7 +3,7 @@
 import { useAccount } from "@starknet-react/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { userApi, User } from "../../services/fakeApi";
+import { userApi, User, communityApi, Community } from "../../services/fakeApi";
 
 interface FollowerProfile {
   name: string;
@@ -27,6 +27,7 @@ export default function FollowerPage() {
     bio: "",
     interests: "",
   });
+  const [recommendedCommunities, setRecommendedCommunities] = useState<Community[]>([]);
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
@@ -54,6 +55,10 @@ export default function FollowerPage() {
           interests: existingUser.interests?.join(", ") || "",
         });
       }
+
+      // Load recommended communities
+      const communities = communityApi.getAllCommunities();
+      setRecommendedCommunities(communities);
     }
   }, [isConnected, address]);
 
@@ -111,6 +116,10 @@ export default function FollowerPage() {
       console.error("Error saving profile:", error);
       // TODO: Add error handling UI
     }
+  };
+
+  const handleCommunityClick = (communityId: string) => {
+    router.push(`/communities/${communityId}`);
   };
 
   if (isLoading) {
@@ -291,28 +300,46 @@ export default function FollowerPage() {
           {/* Recommended Creators */}
           <div className="bg-base-100 rounded-3xl border border-gradient p-8">
             <h2 className="text-2xl font-semibold mb-4">
-              Recommended Creators
+              Recommended Communities
             </h2>
             <div className="grid grid-cols-1 gap-4">
-              {userApi.getCreators().map((creator) => (
-                <div
-                  key={creator.walletAddress}
-                  className="border rounded-lg p-4 hover:shadow-md transition-shadow"
-                >
-                  <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
-                    <div>
-                      <h3 className="font-semibold">{creator.name}</h3>
-                      <p className="text-sm text-gray-600">
-                        {creator.tags?.join(", ")}
-                      </p>
+              {recommendedCommunities.map((community) => {
+                const creator = userApi.getUser(community.creatorAddress);
+                return (
+                  <div
+                    key={community.id}
+                    className="border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
+                    onClick={() => handleCommunityClick(community.id)}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-xl">
+                        {community.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h3 className="font-semibold">{community.name}</h3>
+                        <p className="text-sm text-gray-600">
+                          by {creator?.name || "Unknown Creator"}
+                        </p>
+                      </div>
                     </div>
+                    <p className="mt-2 text-sm text-gray-600 line-clamp-2">
+                      {community.description}
+                    </p>
+                    {community.tags && community.tags.length > 0 && (
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {community.tags.map((tag, index) => (
+                          <span
+                            key={index}
+                            className="px-2 py-0.5 bg-gray-100 rounded-full text-xs text-gray-600"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <button className="mt-4 w-full bg-gray-100 text-gray-700 py-2 px-4 rounded hover:bg-gray-200 transition-colors">
-                    View Profile
-                  </button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>
