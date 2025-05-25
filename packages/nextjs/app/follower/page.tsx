@@ -27,8 +27,12 @@ export default function FollowerPage() {
     bio: "",
     interests: "",
   });
-  const [recommendedCommunities, setRecommendedCommunities] = useState<Community[]>([]);
-  const [subscribedCommunities, setSubscribedCommunities] = useState<Community[]>([]);
+  const [recommendedCommunities, setRecommendedCommunities] = useState<
+    Community[]
+  >([]);
+  const [subscribedCommunities, setSubscribedCommunities] = useState<
+    Community[]
+  >([]);
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
@@ -59,16 +63,16 @@ export default function FollowerPage() {
         // Load subscribed communities
         const subscriptions = userApi.getUserSubscriptions(address);
         const subscribedComms = subscriptions
-          .map(id => communityApi.getCommunity(id))
+          .map((id) => communityApi.getCommunity(id))
           .filter((comm): comm is Community => comm !== null);
         setSubscribedCommunities(subscribedComms);
 
         // Load recommended communities (excluding user's own communities and subscribed ones)
         const allCommunities = communityApi.getAllCommunities();
         const recommendedComms = allCommunities.filter(
-          community => 
-            community.creatorAddress !== address && 
-            !subscriptions.includes(community.id)
+          (community) =>
+            community.creatorAddress !== address &&
+            !subscriptions.includes(community.id),
         );
 
         // Add dummy communities if no recommendations are available
@@ -77,19 +81,21 @@ export default function FollowerPage() {
             {
               id: "dummy1",
               name: "Web3 Developers Hub",
-              description: "A community for web3 developers to share knowledge, collaborate on projects, and stay updated with the latest blockchain technologies.",
+              description:
+                "A community for web3 developers to share knowledge, collaborate on projects, and stay updated with the latest blockchain technologies.",
               creatorAddress: "0x123456789",
               tags: ["Web3", "Development", "Blockchain"],
-              createdAt: new Date().toISOString()
+              createdAt: new Date().toISOString(),
             },
             {
               id: "dummy2",
               name: "NFT Artists Collective",
-              description: "Join fellow NFT artists to showcase your work, get feedback, and learn about the latest trends in digital art and NFT creation.",
+              description:
+                "Join fellow NFT artists to showcase your work, get feedback, and learn about the latest trends in digital art and NFT creation.",
               creatorAddress: "0x987654321",
               tags: ["NFT", "Art", "Digital"],
-              createdAt: new Date().toISOString()
-            }
+              createdAt: new Date().toISOString(),
+            },
           ];
           setRecommendedCommunities(dummyCommunities);
         } else {
@@ -101,19 +107,21 @@ export default function FollowerPage() {
           {
             id: "dummy1",
             name: "Web3 Developers Hub",
-            description: "A community for web3 developers to share knowledge, collaborate on projects, and stay updated with the latest blockchain technologies.",
+            description:
+              "A community for web3 developers to share knowledge, collaborate on projects, and stay updated with the latest blockchain technologies.",
             creatorAddress: "0x123456789",
             tags: ["Web3", "Development", "Blockchain"],
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
           },
           {
             id: "dummy2",
             name: "NFT Artists Collective",
-            description: "Join fellow NFT artists to showcase your work, get feedback, and learn about the latest trends in digital art and NFT creation.",
+            description:
+              "Join fellow NFT artists to showcase your work, get feedback, and learn about the latest trends in digital art and NFT creation.",
             creatorAddress: "0x987654321",
             tags: ["NFT", "Art", "Digital"],
-            createdAt: new Date().toISOString()
-          }
+            createdAt: new Date().toISOString(),
+          },
         ];
         setRecommendedCommunities(dummyCommunities);
       }
@@ -231,7 +239,10 @@ export default function FollowerPage() {
               )}
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 overflow-y-auto flex-grow pr-2">
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-4 overflow-y-auto flex-grow pr-2"
+            >
               <div>
                 <label
                   htmlFor="name"
@@ -409,7 +420,9 @@ export default function FollowerPage() {
 
           {/* Recommended Communities */}
           <div className="bg-base-100 rounded-3xl border border-gradient p-8">
-            <h2 className="text-2xl font-semibold mb-4">Recommended Communities</h2>
+            <h2 className="text-2xl font-semibold mb-4">
+              Recommended Communities
+            </h2>
             <div className="grid grid-cols-1 gap-4">
               {recommendedCommunities.length > 0 ? (
                 recommendedCommunities.map((community) => {
@@ -452,9 +465,12 @@ export default function FollowerPage() {
               ) : (
                 <div className="text-center py-8">
                   <div className="text-4xl mb-4">🎯</div>
-                  <p className="text-lg font-medium text-base-content mb-2">No Communities Found</p>
+                  <p className="text-lg font-medium text-base-content mb-2">
+                    No Communities Found
+                  </p>
                   <p className="text-base-content/70">
-                    We couldn't find any communities to recommend at the moment. Check back later for new communities!
+                    We couldn't find any communities to recommend at the moment.
+                    Check back later for new communities!
                   </p>
                 </div>
               )}
