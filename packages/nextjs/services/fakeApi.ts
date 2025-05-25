@@ -195,15 +195,15 @@ export const userApi = {
   // Subscribe to a community
   subscribeToCommunity: (userAddress: string, communityId: string): User => {
     const users = getUsers();
-    const userIndex = users.findIndex(u => u.walletAddress === userAddress);
-    
+    const userIndex = users.findIndex((u) => u.walletAddress === userAddress);
+
     if (userIndex === -1) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     const user = users[userIndex];
     user.subscriptions = user.subscriptions || [];
-    
+
     if (!user.subscriptions.includes(communityId)) {
       user.subscriptions.push(communityId);
       saveUsers(users);
@@ -213,35 +213,41 @@ export const userApi = {
   },
 
   // Unsubscribe from a community
-  unsubscribeFromCommunity: (userAddress: string, communityId: string): User => {
+  unsubscribeFromCommunity: (
+    userAddress: string,
+    communityId: string,
+  ): User => {
     const users = getUsers();
-    const userIndex = users.findIndex(u => u.walletAddress === userAddress);
-    
+    const userIndex = users.findIndex((u) => u.walletAddress === userAddress);
+
     if (userIndex === -1) {
-      throw new Error('User not found');
+      throw new Error("User not found");
     }
 
     const user = users[userIndex];
     user.subscriptions = user.subscriptions || [];
-    user.subscriptions = user.subscriptions.filter(id => id !== communityId);
+    user.subscriptions = user.subscriptions.filter((id) => id !== communityId);
     saveUsers(users);
 
     return user;
   },
 
   // Check if user is subscribed to a community
-  isSubscribedToCommunity: (userAddress: string, communityId: string): boolean => {
+  isSubscribedToCommunity: (
+    userAddress: string,
+    communityId: string,
+  ): boolean => {
     const users = getUsers();
-    const user = users.find(u => u.walletAddress === userAddress);
+    const user = users.find((u) => u.walletAddress === userAddress);
     return user?.subscriptions?.includes(communityId) || false;
   },
 
   // Get user's subscribed communities
   getUserSubscriptions: (userAddress: string): string[] => {
     const users = getUsers();
-    const user = users.find(u => u.walletAddress === userAddress);
+    const user = users.find((u) => u.walletAddress === userAddress);
     return user?.subscriptions || [];
-  }
+  },
 };
 
 // Posts API
@@ -477,7 +483,10 @@ export const tokenApi = {
 // Community API
 export const communityApi = {
   // Create a new community
-  createCommunity: (creatorAddress: string, data: Omit<Community, 'id' | 'creatorAddress' | 'createdAt'>): Community => {
+  createCommunity: (
+    creatorAddress: string,
+    data: Omit<Community, "id" | "creatorAddress" | "createdAt">,
+  ): Community => {
     const communities = getCommunities();
     const newCommunity: Community = {
       id: crypto.randomUUID(),
@@ -493,21 +502,24 @@ export const communityApi = {
   // Get community by creator address
   getCreatorCommunity: (creatorAddress: string): Community | null => {
     const communities = getCommunities();
-    return communities.find(c => c.creatorAddress === creatorAddress) || null;
+    return communities.find((c) => c.creatorAddress === creatorAddress) || null;
   },
 
   // Get community by ID
   getCommunity: (id: string): Community | null => {
     const communities = getCommunities();
-    return communities.find(c => c.id === id) || null;
+    return communities.find((c) => c.id === id) || null;
   },
 
   // Update community
-  updateCommunity: (id: string, data: Partial<Omit<Community, 'id' | 'creatorAddress' | 'createdAt'>>): Community => {
+  updateCommunity: (
+    id: string,
+    data: Partial<Omit<Community, "id" | "creatorAddress" | "createdAt">>,
+  ): Community => {
     const communities = getCommunities();
-    const index = communities.findIndex(c => c.id === id);
+    const index = communities.findIndex((c) => c.id === id);
     if (index === -1) {
-      throw new Error('Community not found');
+      throw new Error("Community not found");
     }
     communities[index] = {
       ...communities[index],
@@ -520,9 +532,9 @@ export const communityApi = {
   // Delete community
   deleteCommunity: (id: string): void => {
     const communities = getCommunities();
-    const filteredCommunities = communities.filter(c => c.id !== id);
+    const filteredCommunities = communities.filter((c) => c.id !== id);
     if (filteredCommunities.length === communities.length) {
-      throw new Error('Community not found');
+      throw new Error("Community not found");
     }
     saveCommunities(filteredCommunities);
   },
@@ -530,12 +542,16 @@ export const communityApi = {
   // Get all communities
   getAllCommunities: (): Community[] => {
     return getCommunities();
-  }
+  },
 };
 
 // Marketplace API
 export const marketplaceApi = {
-  createArticle: (communityId: string, creatorAddress: string, data: Omit<Article, 'id' | 'communityId' | 'creatorAddress' | 'createdAt'>): Article => {
+  createArticle: (
+    communityId: string,
+    creatorAddress: string,
+    data: Omit<Article, "id" | "communityId" | "creatorAddress" | "createdAt">,
+  ): Article => {
     const articles = getArticles();
     const newArticle: Article = {
       id: crypto.randomUUID(),
@@ -551,23 +567,24 @@ export const marketplaceApi = {
 
   getCommunityArticles: (communityId: string): Article[] => {
     const articles = getArticles();
-    return articles.filter(a => a.communityId === communityId);
+    return articles.filter((a) => a.communityId === communityId);
   },
 
   getArticle: (id: string): Article | null => {
     const articles = getArticles();
-    return articles.find(a => a.id === id) || null;
+    return articles.find((a) => a.id === id) || null;
   },
 
   purchaseArticle: (articleId: string, userAddress: string): boolean => {
     const articles = getArticles();
     const users = getUsers();
-    
-    const article = articles.find(a => a.id === articleId);
+
+    const article = articles.find((a) => a.id === articleId);
     if (!article) return false;
 
-    const user = users.find(u => u.walletAddress === userAddress);
-    if (!user || !user.tokens || !user.tokens[article.creatorAddress]) return false;
+    const user = users.find((u) => u.walletAddress === userAddress);
+    if (!user || !user.tokens || !user.tokens[article.creatorAddress])
+      return false;
 
     const userTokens = user.tokens[article.creatorAddress];
     if (userTokens < article.price) return false;
@@ -575,15 +592,20 @@ export const marketplaceApi = {
     // Deduct tokens
     user.tokens[article.creatorAddress] -= article.price;
     saveUsers(users);
-    
+
     return true;
   },
 
-  updateArticle: (id: string, data: Partial<Omit<Article, 'id' | 'communityId' | 'creatorAddress' | 'createdAt'>>): Article => {
+  updateArticle: (
+    id: string,
+    data: Partial<
+      Omit<Article, "id" | "communityId" | "creatorAddress" | "createdAt">
+    >,
+  ): Article => {
     const articles = getArticles();
-    const index = articles.findIndex(a => a.id === id);
+    const index = articles.findIndex((a) => a.id === id);
     if (index === -1) {
-      throw new Error('Article not found');
+      throw new Error("Article not found");
     }
     articles[index] = {
       ...articles[index],
@@ -595,12 +617,12 @@ export const marketplaceApi = {
 
   deleteArticle: (id: string): void => {
     const articles = getArticles();
-    const filteredArticles = articles.filter(a => a.id !== id);
+    const filteredArticles = articles.filter((a) => a.id !== id);
     if (filteredArticles.length === articles.length) {
-      throw new Error('Article not found');
+      throw new Error("Article not found");
     }
     saveArticles(filteredArticles);
-  }
+  },
 };
 
 // Initialize with some mock data if empty

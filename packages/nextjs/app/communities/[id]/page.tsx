@@ -21,21 +21,24 @@ export default function CommunityPage() {
     const loadCommunityData = () => {
       const communityId = params.id as string;
       const communityData = communityApi.getCommunity(communityId);
-      
+
       if (communityData) {
         setCommunity(communityData);
         const creatorData = userApi.getUser(communityData.creatorAddress);
         setCreator(creatorData);
-        const communityArticles = marketplaceApi.getCommunityArticles(communityId);
+        const communityArticles =
+          marketplaceApi.getCommunityArticles(communityId);
         setArticles(communityArticles);
-        
+
         if (address) {
           const user = userApi.getUser(address);
           setUserTokens(user?.tokens?.[communityData.creatorAddress] || 0);
-          setIsSubscribed(userApi.isSubscribedToCommunity(address, communityId));
+          setIsSubscribed(
+            userApi.isSubscribedToCommunity(address, communityId),
+          );
         }
       }
-      
+
       setIsLoading(false);
     };
 
@@ -44,12 +47,12 @@ export default function CommunityPage() {
 
   const handlePurchase = (articleId: string) => {
     if (!address) return;
-    
+
     const success = marketplaceApi.purchaseArticle(articleId, address);
     if (success) {
       // Refresh user tokens
       const user = userApi.getUser(address);
-      setUserTokens(user?.tokens?.[community?.creatorAddress || ''] || 0);
+      setUserTokens(user?.tokens?.[community?.creatorAddress || ""] || 0);
     }
   };
 
@@ -76,7 +79,9 @@ export default function CommunityPage() {
     return (
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-8">Community Not Found</h1>
-        <p className="text-base-content/70">The community you're looking for doesn't exist.</p>
+        <p className="text-base-content/70">
+          The community you're looking for doesn't exist.
+        </p>
       </div>
     );
   }
@@ -92,7 +97,9 @@ export default function CommunityPage() {
             </div>
             <div>
               <h1 className="text-4xl font-bold mb-2">{community.name}</h1>
-              <p className="text-base-content/70">Created by {creator?.name || "Unknown Creator"}</p>
+              <p className="text-base-content/70">
+                Created by {creator?.name || "Unknown Creator"}
+              </p>
             </div>
           </div>
           {address && address !== community.creatorAddress && (
@@ -100,17 +107,19 @@ export default function CommunityPage() {
               onClick={handleSubscriptionToggle}
               className={`px-6 py-3 rounded-xl font-semibold transition-colors ${
                 isSubscribed
-                  ? 'bg-red-500 hover:bg-red-600 text-white'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  ? "bg-red-500 hover:bg-red-600 text-white"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
             >
-              {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+              {isSubscribed ? "Unsubscribe" : "Subscribe"}
             </button>
           )}
         </div>
-        
-        <p className="text-lg text-base-content/70 mb-6">{community.description}</p>
-        
+
+        <p className="text-lg text-base-content/70 mb-6">
+          {community.description}
+        </p>
+
         {community.tags && community.tags.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {community.tags.map((tag, index) => (
@@ -133,14 +142,18 @@ export default function CommunityPage() {
             <h2 className="text-2xl font-semibold">Community Marketplace</h2>
             {address && (
               <div className="text-base-content/70">
-                Your Balance: <span className="font-semibold">{userTokens} tokens</span>
+                Your Balance:{" "}
+                <span className="font-semibold">{userTokens} tokens</span>
               </div>
             )}
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {articles.map((article) => (
-              <div key={article.id} className="bg-base-100 rounded-3xl border border-gradient p-6">
+              <div
+                key={article.id}
+                className="bg-base-100 rounded-3xl border border-gradient p-6"
+              >
                 <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
                 <p className="text-base-content/70 mb-4 line-clamp-2">
                   {article.description}
@@ -154,15 +167,15 @@ export default function CommunityPage() {
                     disabled={!address || userTokens < article.price}
                     className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                       !address || userTokens < article.price
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                        ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
                     }`}
                   >
                     {!address
-                      ? 'Connect Wallet'
+                      ? "Connect Wallet"
                       : userTokens < article.price
-                      ? 'Insufficient Tokens'
-                      : 'Purchase'}
+                        ? "Insufficient Tokens"
+                        : "Purchase"}
                   </button>
                 </div>
               </div>
@@ -208,4 +221,4 @@ export default function CommunityPage() {
       </div>
     </div>
   );
-} 
+}

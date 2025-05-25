@@ -27,7 +27,9 @@ export default function FollowerPage() {
     bio: "",
     interests: "",
   });
-  const [recommendedCommunities, setRecommendedCommunities] = useState<Community[]>([]);
+  const [recommendedCommunities, setRecommendedCommunities] = useState<
+    Community[]
+  >([]);
 
   useEffect(() => {
     if (!isConnecting && !isConnected) {
