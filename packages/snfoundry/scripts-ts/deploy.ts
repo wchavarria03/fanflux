@@ -49,6 +49,13 @@ const deployScript = async (): Promise<void> => {
   //   },
   // });
 
+  await deployContract({
+      contract: "Factory",
+      // constructorArgs: {
+      //   owner: deployer.address,
+      // },
+    });
+
   // await deployContract({
   //   contract: "MyToken",
   //   constructorArgs: {
