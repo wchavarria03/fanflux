@@ -56,15 +56,15 @@ const deployScript = async (): Promise<void> => {
       // },
     });
 
-  // await deployContract({
-  //   contract: "MyToken",
-  //   constructorArgs: {
-  //     name: "MyToken2",
-  //     symbol: "MTK2",
-  //     initial_supply: 1,
-  //     recipient: deployer.address,
-  //   },
-  // });
+  await deployContract({
+    contract: "MyToken",
+    constructorArgs: {
+      name: "FluxToken",
+      symbol: "Flux",
+      initial_supply: 1000000,
+      recipient: deployer.address,
+    },
+  });
 };
 
 const main = async (): Promise<void> => {
