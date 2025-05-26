@@ -413,59 +413,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Cross-chain Bridges
 - Alternative L1s
 
-## 📚 Additional Resources
-
-- [Technical Documentation](https://docs.fanflux.io/technical)
-- [API Reference](https://docs.fanflux.io/api)
-- [Smart Contract Documentation](https://docs.fanflux.io/contracts)
-- [User Guides](https://docs.fanflux.io/guides)
-- [FAQs](https://docs.fanflux.io/faq)
-- [Security Docs](https://docs.fanflux.io/security)
-- [Tokenomics](https://docs.fanflux.io/tokenomics)
-- [Governance](https://docs.fanflux.io/governance)
-
-## 🗺 Roadmap
-
-### Q2 2024
-- Launch beta version
-- Integration with major content platforms
-- Mobile app development
-- Community governance implementation
-- Smart contract audits
-- Creator onboarding program
-- Marketing campaign launch
-- Partnership announcements
-
-### Q3 2024
-- Cross-chain bridge implementation
-- Enhanced analytics dashboard
-- Creator marketplace launch
-- Mobile app beta testing
-- NFT marketplace integration
-- DeFi features rollout
-- International expansion planning
-- Security upgrades
-
-### Q4 2024
-- Mobile app launch
-- Advanced governance features
-- International expansion
-- Enterprise partnerships
-- Enhanced creator tools
-- Advanced analytics
-- Platform optimization
-- Community rewards program
 
 ## 🆘 Support
 
 If you need help:
-- Open an issue on our [GitHub repository](https://github.com/your-repo/fanflux)
-- Join our [Discord community](https://discord.gg/your-discord)
-- Follow us on [Twitter](https://twitter.com/fanflux)
-- Read our [Documentation](https://docs.fanflux.io)
-- Check our [FAQ](https://docs.fanflux.io/faq)
-- Email support: support@fanflux.io
-
+- Open an issue on our [GitHub repository]( https://github.com/wugalde19/fanflux)
 ## 🏆 Awards and Recognition
 
 - Best Web3 Platform 2024
@@ -476,11 +428,6 @@ If you need help:
 
 ---
 
-<p align="center">Built with ❤️ by the FanFlux team</p>
 
-<p align="center">
-  <a href="https://twitter.com/fanflux">Twitter</a> •
-  <a href="https://discord.gg/your-discord">Discord</a> •
-  <a href="https://docs.fanflux.io">Docs</a> •
-  <a href="mailto:contact@fanflux.io">Contact</a>
-</p>
+
+
