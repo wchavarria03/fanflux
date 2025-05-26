@@ -390,15 +390,7 @@ yarn deploy:frontend:prod
 
 If you need help:
 - Open an issue on our [GitHub repository]( https://github.com/wugalde19/fanflux)
-## 🏆 Awards and Recognition
 
-- Best Web3 Platform 2024
-- Innovation in Creator Economy
-- Outstanding User Experience
-- Community Choice Award
-- Security Excellence Award
-
----
 
 
 
