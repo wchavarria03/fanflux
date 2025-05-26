@@ -42,12 +42,22 @@ import { green } from "./helpers/colorize-log";
  * @returns {Promise<void>}
  */
 const deployScript = async (): Promise<void> => {
-  await deployContract({
-    contract: "YourContract",
-    constructorArgs: {
-      owner: deployer.address,
-    },
-  });
+  // await deployContract({
+  //   contract: "YourContract",
+  //   constructorArgs: {
+  //     owner: deployer.address,
+  //   },
+  // });
+
+  // await deployContract({
+  //   contract: "MyToken",
+  //   constructorArgs: {
+  //     name: "MyToken2",
+  //     symbol: "MTK2",
+  //     initial_supply: 1,
+  //     recipient: deployer.address,
+  //   },
+  // });
 };
 
 const main = async (): Promise<void> => {
