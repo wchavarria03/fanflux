@@ -194,7 +194,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.starkup.sh | sh
 
 2. Clone and set up the project:
 ```bash
-git clone https://github.com/your-repo/fanflux.git
+git clone  https://github.com/wugalde19/fanflux.git
 cd fanflux
 yarn install
 ```
@@ -349,24 +349,7 @@ yarn deploy:frontend:prod
 ## 🔒 Security
 
 - All smart contracts are thoroughly audited
-- Regular security assessments
-- Bug bounty program available
-- Multi-signature requirements for critical operations
-- Regular penetration testing
-- Automated vulnerability scanning
-- Security incident response plan
-- Regular security training
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Process
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to your fork
-5. Submit a pull request
 
 ### Code Style
 - Follow the project's ESLint configuration
@@ -374,10 +357,6 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 - Include tests for new features
 - Update documentation as needed
 - Follow the PR template
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 💡 Use Cases
 
