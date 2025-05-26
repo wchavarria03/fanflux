@@ -640,7 +640,7 @@ const initializeMockData = () => {
     const mockPosts: Post[] = [
       {
         id: "1",
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         content:
           "Just launched my new NFT collection! Check it out and let me know what you think. This collection represents my journey in digital art over the past year.",
         timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
@@ -673,7 +673,7 @@ const initializeMockData = () => {
       },
       {
         id: "2",
-        creatorAddress: "0x789",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         content:
           "Just published a new tutorial on building smart contracts with Cairo! Check it out and let me know if you have any questions. Link in bio.",
         timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
@@ -699,7 +699,7 @@ const initializeMockData = () => {
       },
       {
         id: "3",
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         content:
           "Working on some exciting new pieces for my next collection. Here's a sneak peek at the concept art. What do you think about the direction?",
         timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
@@ -741,7 +741,7 @@ const initializeMockData = () => {
       },
       {
         id: "4",
-        creatorAddress: "0x789",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         content:
           "Just wrapped up a successful workshop on StarkNet development! Thanks to everyone who participated. The community questions were fantastic. I'll be posting the recording soon.",
         timestamp: new Date(Date.now() - 172800000).toISOString(), // 2 days ago

@@ -104,11 +104,7 @@ export default function Post({
       <div className="flex items-center space-x-6 mb-4">
         <button
           onClick={handleLike}
-          className={`flex items-center space-x-2 ${
-            address && likes.includes(address)
-              ? "text-primary"
-              : "text-base-content/70"
-          }`}
+          className={`flex items-center space-x-2`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -116,6 +112,7 @@ export default function Post({
             fill={address && likes.includes(address) ? "currentColor" : "none"}
             viewBox="0 0 24 24"
             stroke="currentColor"
+
           >
             <path
               strokeLinecap="round"

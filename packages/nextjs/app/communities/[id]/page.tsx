@@ -27,7 +27,8 @@ export default function CommunityPage() {
         const creatorData = userApi.getUser(communityData.creatorAddress);
         setCreator(creatorData);
         const communityArticles =
-          marketplaceApi.getCommunityArticles(communityId);
+        // marketplaceApi.getCommunityArticles(communityId); // TODO: Enable later with real data
+        marketplaceApi.getCommunityArticles("a83fde87-b5b2-415f-8a6b-39f861792e2f"); // Load mock data
         setArticles(communityArticles);
 
         if (address) {
@@ -48,6 +49,7 @@ export default function CommunityPage() {
   const handlePurchase = (articleId: string) => {
     if (!address) return;
 
+    debugger;
     const success = marketplaceApi.purchaseArticle(articleId, address);
     if (success) {
       // Refresh user tokens
@@ -254,7 +256,7 @@ export default function CommunityPage() {
                       className={`w-full py-2 rounded-lg font-semibold transition-colors ${
                         !address || userTokens < article.price
                           ? "bg-base-200 text-base-content/50 cursor-not-allowed"
-                          : "bg-primary text-primary-content hover:bg-primary-focus"
+                          : "bg-secondary text-primary-content hover:bg-primary-focus"
                       }`}
                     >
                       {!address

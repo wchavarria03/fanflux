@@ -320,7 +320,7 @@ export default function CreatorPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
+                  className="w-full bg-secondary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
                 >
                   Create Community
                 </button>
@@ -630,7 +630,7 @@ export default function CreatorPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
+                  className="w-full bg-secondary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
                 >
                   Generate Tokens
                 </button>

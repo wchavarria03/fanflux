@@ -33,6 +33,14 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Creator",
     href: "/creator",
   },
+  {
+    label: "Communities",
+    href: "/communities",
+  },
+  {
+    label: "Feed",
+    href: "/feed",
+  },
 ];
 
 export const HeaderMenuLinks = () => {

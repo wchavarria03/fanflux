@@ -48,12 +48,12 @@ export const HeroSection = () => (
       <ConnectedAddress className="transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-purple-500/20" />
 
       <Link
-        href="/creators"
+        href="/communities"
         className="relative group bg-gradient-to-br from-purple-600 to-pink-600 px-8 py-4 rounded-2xl font-semibold transition-all 
                    hover:from-purple-500 hover:to-pink-500 hover:shadow-2xl hover:shadow-pink-500/30"
       >
         <span className="relative z-10 flex items-center gap-2">
-          <span className="text-white">Explorar Creadores</span>
+          <span className="text-white">Explorar Comunidades</span>
           <span className="animate-pulse">🚀</span>
         </span>
         <div className="absolute inset-0 bg-gradient-to-br from-purple-700 to-pink-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />

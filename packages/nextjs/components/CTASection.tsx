@@ -62,7 +62,7 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="bg-gradient-to-r from-purple-300 to-pink-200 bg-clip-text text-transparent text-lg">
-                  Explorar Comunidades
+                  Empezar como Seguidor
                 </span>
                 <div className="mt-2 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity w-3/4 mx-auto" />
               </Link>

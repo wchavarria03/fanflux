@@ -102,6 +102,7 @@ export default function FollowerPage() {
           setRecommendedCommunities(recommendedComms);
         }
       } else {
+        setIsEditing(true);
         // For new users, show dummy communities
         const dummyCommunities: Community[] = [
           {
@@ -314,10 +315,10 @@ export default function FollowerPage() {
                 )}
               </div>
 
-              {!user && !isEditing && (
+              {!user && isEditing && (
                 <button
                   type="submit"
-                  className="w-full bg-primary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
+                  className="w-full bg-secondary text-primary-content py-3 px-6 rounded-lg hover:bg-primary-focus transition-colors font-semibold"
                 >
                   Save Profile
                 </button>
