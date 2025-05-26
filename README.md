@@ -1,7 +1,6 @@
 # 🌟 FanFlux
 
 <div align="center">
-  <img src="./packages/nextjs/public/fanflux-logo.png" alt="FanFlux Logo" width="200"/>
   <h4>A decentralized platform for fan engagement and creator monetization on Starknet</h4>
 </div>
 
@@ -14,12 +13,6 @@
   <a href="#use-cases">Use Cases</a>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/github/license/your-repo/fanflux" alt="License">
-  <img src="https://img.shields.io/github/stars/your-repo/fanflux" alt="Stars">
-  <img src="https://img.shields.io/github/forks/your-repo/fanflux" alt="Forks">
-  <img src="https://img.shields.io/github/issues/your-repo/fanflux" alt="Issues">
-</p>
 
 ## 📖 Overview
 
