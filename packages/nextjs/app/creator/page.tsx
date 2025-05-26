@@ -1,6 +1,6 @@
 "use client";
 
-import { useAccount } from "@starknet-react/core";
+import { useAccount, useContractFactory } from "@starknet-react/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -11,6 +11,9 @@ import {
   communityApi,
   Community,
 } from "../../services/fakeApi";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
+import { useDeployedContractInfo } from "~~/hooks/scaffold-stark/useDeployedContractInfo";
+import { useScaffoldContract } from "~~/hooks/scaffold-stark/useScaffoldContract";
 
 interface CommunityForm {
   name: string;
@@ -36,6 +39,9 @@ interface TokenGenerationForm {
 
 export default function CreatorPage() {
   const { isConnected, isConnecting, address } = useAccount();
+  const MY_TOKEN_CONTRACT_CLASS_HASH = "0x016b914f5a73ee4e52879cace7de586abf56e0c745c0cc7275d7773eaaa59b2f";
+  const factoryContract = useScaffoldContract({ contractName: "Factory" });
+
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState<CommunityForm>({
@@ -180,6 +186,27 @@ export default function CreatorPage() {
       setTokenGenerationData({
         amount: 1000,
       });
+
+      
+      try {
+        if (factoryContract) {
+          const name = "Flux Token"; // TODO: Add to form to let creator decide name
+          const symbol = "FLUX"; // TODO: Add to form to let creator decide symbol
+          const supply = tokenGenerationData.amount;
+          const classHash = MY_TOKEN_CONTRACT_CLASS_HASH;
+
+
+          // Here is where we call the deploy function of the "Factory" contract
+          // This will deploy a new ERC20 token contract with the given name, symbol, supply and class hash
+          // TODO: Uncomment to deploy new token contract
+          // await factoryContract.data?.invoke(
+          //   "deploy", 
+          //   [name, symbol, supply, classHash],
+          // );
+        }
+      } catch (e) {
+        console.log(e);
+      }
     } catch (error) {
       console.error("Error creating token reward:", error);
       // TODO: Add error handling UI
