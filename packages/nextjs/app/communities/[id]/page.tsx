@@ -16,6 +16,7 @@ export default function CommunityPage() {
   const [userTokens, setUserTokens] = useState<number>(0);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [purchasedArticles, setPurchasedArticles] = useState<string[]>([]);
 
   useEffect(() => {
     const loadCommunityData = () => {
@@ -37,6 +38,10 @@ export default function CommunityPage() {
           setIsSubscribed(
             userApi.isSubscribedToCommunity(address, communityId),
           );
+          
+          // Load purchased articles for the current user
+          const userPurchases = marketplaceApi.getUserPurchasedArticles(address);
+          setPurchasedArticles(userPurchases || []);
         }
       }
 
@@ -55,6 +60,9 @@ export default function CommunityPage() {
       // Refresh user tokens
       const user = userApi.getUser(address);
       setUserTokens(user?.tokens?.[community?.creatorAddress || ""] || 0);
+      
+      // Update purchased articles
+      setPurchasedArticles(prev => [...prev, articleId]);
     }
   };
 
@@ -252,18 +260,24 @@ export default function CommunityPage() {
                     </div>
                     <button
                       onClick={() => handlePurchase(article.id)}
-                      disabled={!address || userTokens < article.price}
+                      disabled={!address || userTokens < article.price || purchasedArticles.includes(article.id)}
                       className={`w-full py-2 rounded-lg font-semibold transition-colors ${
-                        !address || userTokens < article.price
+                        !address
                           ? "bg-base-200 text-base-content/50 cursor-not-allowed"
-                          : "bg-secondary text-primary-content hover:bg-primary-focus"
+                          : purchasedArticles.includes(article.id)
+                          ? "bg-green-500 text-white cursor-not-allowed"
+                          : userTokens < article.price
+                            ? "bg-base-200 text-base-content/50 cursor-not-allowed"
+                            : "bg-secondary text-primary-content hover:bg-primary-focus"
                       }`}
                     >
                       {!address
                         ? "Connect Wallet"
-                        : userTokens < article.price
-                          ? "Insufficient"
-                          : "Purchase"}
+                        : purchasedArticles.includes(article.id)
+                          ? "Purchased"
+                          : userTokens < article.price
+                            ? "Insufficient"
+                            : "Purchase"}
                     </button>
                   </div>
                 </div>

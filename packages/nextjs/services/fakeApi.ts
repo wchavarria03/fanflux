@@ -9,6 +9,7 @@ export interface User {
   createdAt: string;
   tokens?: { [creatorAddress: string]: number }; // Map of creator address to token amount
   subscriptions?: string[]; // Array of community IDs the user is subscribed to
+  purchasedArticles?: string[]; // Array of article IDs the user has purchased
 }
 
 export interface Community {
@@ -590,9 +591,22 @@ export const marketplaceApi = {
 
     // Deduct tokens
     user.tokens[article.creatorAddress] -= article.price;
+    
+    // Track purchased article
+    user.purchasedArticles = user.purchasedArticles || [];
+    if (!user.purchasedArticles.includes(articleId)) {
+      user.purchasedArticles.push(articleId);
+    }
+    
     saveUsers(users);
 
     return true;
+  },
+
+  getUserPurchasedArticles: (userAddress: string): string[] => {
+    const users = getUsers();
+    const user = users.find((u) => u.walletAddress === userAddress);
+    return user?.purchasedArticles || [];
   },
 
   updateArticle: (
@@ -788,7 +802,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 100,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/nft1/400/400",
       },
       {
@@ -800,7 +814,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 250,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/workshop1/400/400",
       },
       {
@@ -811,7 +825,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 150,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/masterclass1/400/400",
       },
       {
@@ -823,7 +837,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 75,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/membership1/400/400",
       },
       {
@@ -834,7 +848,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 200,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/tools1/400/400",
       },
       {
@@ -845,7 +859,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 300,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/mentoring1/400/400",
       },
       {
@@ -856,7 +870,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 125,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/portfolio1/400/400",
       },
       {
@@ -867,7 +881,7 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 50,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x123",
+        creatorAddress: "0x01a9122d485ffdba8d0d4c32c53b19348acf525fc8a34bf1c95476af977e1c78",
         imageUrl: "https://picsum.photos/seed/templates1/400/400",
       },
     ];
