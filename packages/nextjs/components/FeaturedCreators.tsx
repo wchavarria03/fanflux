@@ -4,7 +4,7 @@ export const FeaturedCreators = () => {
   const creators = [
     {
       name: "DigitalArtistX",
-      category: "Arte Digital",
+      category: "Digital Art",
       tokens: "DART",
       fans: "12.4K",
       image: "/creators/1.png",
@@ -18,7 +18,7 @@ export const FeaturedCreators = () => {
     },
     {
       name: "CryptoMusician",
-      category: "Música",
+      category: "Music",
       tokens: "BEAT",
       fans: "15.2K",
       image: "/creators/3.png",
@@ -28,7 +28,7 @@ export const FeaturedCreators = () => {
   return (
     <section className="container mx-auto px-4 py-20">
       <h2 className="text-4xl font-bold text-center mb-12">
-        Creadores Destacados
+        Featured Creators
       </h2>
       <div className="grid md:grid-cols-3 gap-8">
         {creators.map((creator, index) => (

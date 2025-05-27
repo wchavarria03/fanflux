@@ -29,11 +29,10 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
               className="mb-8"
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-purple-100 bg-clip-text text-transparent">
-                Tu Comunidad te Espera
+                Your Community Awaits
               </h2>
               <p className="text-xl text-purple-50/90 max-w-2xl mx-auto leading-relaxed">
-                Transforma tu pasión en una economía digital y conecta con tus
-                fans de forma revolucionaria
+                Transform your passion into a digital economy and connect with your fans in a revolutionary way
               </p>
             </motion.div>
 
@@ -50,7 +49,7 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity" />
                 <span className="bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent text-lg">
-                  Empezar como Creador
+                  Start as Creator
                 </span>
                 <div className="mt-2 h-0.5 bg-gradient-to-r from-transparent via-purple-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity w-3/4 mx-auto" />
               </Link>
@@ -62,7 +61,7 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="bg-gradient-to-r from-purple-300 to-pink-200 bg-clip-text text-transparent text-lg">
-                  Empezar como Seguidor
+                  Start as Follower
                 </span>
                 <div className="mt-2 h-0.5 bg-gradient-to-r from-transparent via-pink-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity w-3/4 mx-auto" />
               </Link>
@@ -77,15 +76,14 @@ export const CTASection = ({ isConnected }: CTASectionProps) => {
         >
           <div className="bg-gray-900/50 rounded-3xl p-12 border border-white/10 backdrop-blur-xl shadow-xl">
             <h3 className="text-4xl font-bold mb-6 bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
-              Acceso Exclusivo
+              Exclusive Access
             </h3>
             <p className="text-gray-400 mb-8 max-w-xl mx-auto text-lg">
-              Conecta tu wallet para descubrir contenido único, beneficios
-              especiales y una nueva forma de interactuar
+              Connect your wallet to discover unique content, special benefits, and a new way to interact
             </p>
             <div className="bg-gradient-to-r from-purple-600/30 to-pink-600/30 p-1 rounded-full inline-block">
               <div className="bg-gray-900 px-8 py-3 rounded-full font-medium text-purple-300 animate-pulse">
-                Wallet no conectada
+                Wallet not connected
               </div>
             </div>
           </div>

@@ -18,10 +18,10 @@ export const HeroSection = () => (
       transition={{ duration: 0.8 }}
     >
       <h1 className="text-5xl md:text-8xl font-bold mb-6 bg-gradient-to-r from-purple-300 via-pink-400 to-purple-500 bg-clip-text text-transparent leading-tight">
-        Revoluciona la
-        <br className="hidden md:block" /> Conexión con tus Fans
+        Revolutionize Your
+        <br className="hidden md:block" /> Fan Connection
         <div className="mt-4 text-4xl md:text-5xl bg-gradient-to-r from-pink-400 to-yellow-300 bg-clip-text text-transparent">
-          En la Web3
+          In Web3
         </div>
       </h1>
     </motion.div>
@@ -32,11 +32,11 @@ export const HeroSection = () => (
       transition={{ delay: 0.3, duration: 0.8 }}
       className="text-xl md:text-2xl text-gray-200 mb-12 max-w-3xl mx-auto font-light leading-relaxed"
     >
-      Donde creadores y fans construyen juntos una{" "}
+      Where creators and fans build together a{" "}
       <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold">
-        economía digital sostenible
+        sustainable digital economy
       </span>{" "}
-      a través de tokens interactivos y contenido exclusivo.
+      through interactive tokens and exclusive content.
     </motion.p>
 
     <motion.div
@@ -54,7 +54,7 @@ export const HeroSection = () => (
                    hover:from-purple-500 hover:to-pink-500 hover:shadow-2xl hover:shadow-pink-500/30"
       >
         <span className="relative z-10 flex items-center gap-2">
-          <span className="text-white">Explorar Comunidades</span>
+          <span className="text-white">Explore Communities</span>
           <span className="animate-pulse">🚀</span>
         </span>
         <div className="absolute inset-0 bg-gradient-to-br from-purple-700 to-pink-700 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />

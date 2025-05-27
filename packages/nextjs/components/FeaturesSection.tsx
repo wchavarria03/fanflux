@@ -1,19 +1,19 @@
 export const FeaturesSection = () => {
   const features = [
     {
-      title: "Tokens de Creador",
-      description: "Cada creador tiene su propia economía tokenizada",
+      title: "Creator Tokens",
+      description: "Each creator has their own tokenized economy",
       icon: "🪙",
     },
     {
-      title: "Recompensas Interactivas",
-      description: "Gana NFTs y beneficios exclusivos apoyando a tus creadores",
+      title: "Interactive Rewards",
+      description: "Earn NFTs and exclusive benefits by supporting your creators",
       icon: "🎁",
     },
     {
-      title: "Mercado Digital",
+      title: "Digital Marketplace",
       description:
-        "Compra, vende y comercia contenido único en nuestro mercado Web3",
+        "Buy, sell, and trade unique content in our Web3 marketplace",
       icon: "🛍️",
     },
   ];
