@@ -45,6 +45,7 @@ export const HeroSection = () => (
       transition={{ delay: 0.5, duration: 0.8 }}
       className="flex flex-col md:flex-row justify-center items-center gap-6 mb-20"
     >
+      {/* @ts-ignore */}
       <ConnectedAddress className="transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-purple-500/20" />
 
       <Link

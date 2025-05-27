@@ -4,7 +4,6 @@ import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
 import { postsApi, tokenApi } from "../services/fakeApi";
 import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
-import { useScaffoldWriteMyTokenContract } from "~~/hooks/scaffold-stark/useScaffoldWriteMyTokenContract";
 
 interface Comment {
   id: string;
