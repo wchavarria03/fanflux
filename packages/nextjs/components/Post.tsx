@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useAccount } from "@starknet-react/core";
-import { postsApi } from "../services/fakeApi";
+import { postsApi, tokenApi } from "../services/fakeApi";
+import { useScaffoldWriteContract } from "~~/hooks/scaffold-stark/useScaffoldWriteContract";
+import { useScaffoldWriteMyTokenContract } from "~~/hooks/scaffold-stark/useScaffoldWriteMyTokenContract";
 
 interface Comment {
   id: string;
@@ -38,6 +40,11 @@ export default function Post({
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [newComment, setNewComment] = useState("");
   const [showComments, setShowComments] = useState(false);
+  const { sendAsync: writeContractAsync } = useScaffoldWriteContract({
+    contractName: "MyToken",
+    functionName: "transferFrom",
+    args: [address, address, 100],
+  });
 
   const handleLike = async () => {
     if (!address) return;
@@ -45,6 +52,8 @@ export default function Post({
     try {
       const updatedPost = postsApi.toggleLike(id, address);
       setLikes(updatedPost.likes);
+      // TODO: SmartContract action: Assign token reward to the user
+      getAwardTokens(address, id);
     } catch (error) {
       console.error("Error toggling like:", error);
     }
@@ -65,10 +74,32 @@ export default function Post({
         },
       ]);
       setNewComment("");
+
+      // TODO: SmartContract action: Assign token reward to the user
+      getAwardTokens(address, id);
+
     } catch (error) {
       console.error("Error adding comment:", error);
     }
   };
+
+  const getAwardTokens = (address: string, postId: string) => {
+    // TODO: SmartContract action: Assign token reward to the user
+    const post = postsApi.getPost(id);
+    if (!post) {
+      console.error("Post not found");
+      return;
+    }
+
+    const creatorAddress = post?.creatorAddress || "";
+    let reward = tokenApi.awardTokens(address, creatorAddress);
+
+    // TODO: Uncomment after testing
+    // This assigns tokens to user for liking and commenting on a post
+    // writeContractAsync({
+      // args: [creatorAddress, address, reward],
+    // });
+  }
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
