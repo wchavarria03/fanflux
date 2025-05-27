@@ -391,7 +391,12 @@ yarn deploy:frontend:prod
 If you need help:
 - Open an issue on our [GitHub repository]( https://github.com/wugalde19/fanflux)
 
+## Smart Contracts Information:
+### MyToken Contract (Sepolia)
+Contract Address: 0x544f567c2c2ec661faac3e7b568e9fce495eaefd9fc85a1ffabfea883a1f20c
+Class Hash: 0x016b914f5a73ee4e52879cace7de586abf56e0c745c0cc7275d7773eaaa59b2f
 
-
-
+### Factory Contract (Sepolia)
+Contract Address: 0x7df922fa83125ff77060e079d7210464b3a483096d8108af3153965e8510cd8
+Class Hash: 0x03b33627577b841e07b3ad604ca5c0243ee64456544243428f87b67f26abefc3
 
