@@ -28,8 +28,10 @@ export default function CommunityPage() {
         const creatorData = userApi.getUser(communityData.creatorAddress);
         setCreator(creatorData);
         const communityArticles =
-        // marketplaceApi.getCommunityArticles(communityId); // TODO: Enable later with real data
-        marketplaceApi.getCommunityArticles("a83fde87-b5b2-415f-8a6b-39f861792e2f"); // Load mock data
+          // marketplaceApi.getCommunityArticles(communityId); // TODO: Enable later with real data
+          marketplaceApi.getCommunityArticles(
+            "a83fde87-b5b2-415f-8a6b-39f861792e2f",
+          ); // Load mock data
         setArticles(communityArticles);
 
         if (address) {
@@ -38,9 +40,10 @@ export default function CommunityPage() {
           setIsSubscribed(
             userApi.isSubscribedToCommunity(address, communityId),
           );
-          
+
           // Load purchased articles for the current user
-          const userPurchases = marketplaceApi.getUserPurchasedArticles(address);
+          const userPurchases =
+            marketplaceApi.getUserPurchasedArticles(address);
           setPurchasedArticles(userPurchases || []);
         }
       }
@@ -60,9 +63,9 @@ export default function CommunityPage() {
       // Refresh user tokens
       const user = userApi.getUser(address);
       setUserTokens(user?.tokens?.[community?.creatorAddress || ""] || 0);
-      
+
       // Update purchased articles
-      setPurchasedArticles(prev => [...prev, articleId]);
+      setPurchasedArticles((prev) => [...prev, articleId]);
     }
   };
 
@@ -260,15 +263,19 @@ export default function CommunityPage() {
                     </div>
                     <button
                       onClick={() => handlePurchase(article.id)}
-                      disabled={!address || userTokens < article.price || purchasedArticles.includes(article.id)}
+                      disabled={
+                        !address ||
+                        userTokens < article.price ||
+                        purchasedArticles.includes(article.id)
+                      }
                       className={`w-full py-2 rounded-lg font-semibold transition-colors ${
                         !address
                           ? "bg-base-200 text-base-content/50 cursor-not-allowed"
                           : purchasedArticles.includes(article.id)
-                          ? "bg-green-500 text-white cursor-not-allowed"
-                          : userTokens < article.price
-                            ? "bg-base-200 text-base-content/50 cursor-not-allowed"
-                            : "bg-secondary text-primary-content hover:bg-primary-focus"
+                            ? "bg-green-500 text-white cursor-not-allowed"
+                            : userTokens < article.price
+                              ? "bg-base-200 text-base-content/50 cursor-not-allowed"
+                              : "bg-secondary text-primary-content hover:bg-primary-focus"
                       }`}
                     >
                       {!address

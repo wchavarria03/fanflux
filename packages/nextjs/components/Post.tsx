@@ -76,7 +76,6 @@ export default function Post({
 
       // TODO: SmartContract action: Assign token reward to the user
       getAwardTokens(address, id);
-
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -96,9 +95,9 @@ export default function Post({
     // TODO: Uncomment after testing
     // This assigns tokens to user for liking and commenting on a post
     // writeContractAsync({
-      // args: [creatorAddress, address, reward],
+    // args: [creatorAddress, address, reward],
     // });
-  }
+  };
 
   const formatTimestamp = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -132,17 +131,13 @@ export default function Post({
 
       {/* Post Actions */}
       <div className="flex items-center space-x-6 mb-4">
-        <button
-          onClick={handleLike}
-          className={`flex items-center space-x-2`}
-        >
+        <button onClick={handleLike} className={`flex items-center space-x-2`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
             fill={address && likes.includes(address) ? "currentColor" : "none"}
             viewBox="0 0 24 24"
             stroke="currentColor"
-
           >
             <path
               strokeLinecap="round"

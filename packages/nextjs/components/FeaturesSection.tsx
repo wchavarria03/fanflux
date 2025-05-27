@@ -7,7 +7,8 @@ export const FeaturesSection = () => {
     },
     {
       title: "Interactive Rewards",
-      description: "Earn NFTs and exclusive benefits by supporting your creators",
+      description:
+        "Earn NFTs and exclusive benefits by supporting your creators",
       icon: "🎁",
     },
     {

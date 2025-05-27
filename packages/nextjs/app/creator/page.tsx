@@ -39,7 +39,8 @@ interface TokenGenerationForm {
 
 export default function CreatorPage() {
   const { isConnected, isConnecting, address } = useAccount();
-  const MY_TOKEN_CONTRACT_CLASS_HASH = "0x016b914f5a73ee4e52879cace7de586abf56e0c745c0cc7275d7773eaaa59b2f";
+  const MY_TOKEN_CONTRACT_CLASS_HASH =
+    "0x016b914f5a73ee4e52879cace7de586abf56e0c745c0cc7275d7773eaaa59b2f";
   const factoryContract = useScaffoldContract({ contractName: "Factory" });
 
   const router = useRouter();
@@ -187,7 +188,6 @@ export default function CreatorPage() {
         amount: 1000,
       });
 
-      
       try {
         if (factoryContract) {
           const name = "Flux Token"; // TODO: Add to form to let creator decide name
@@ -195,12 +195,11 @@ export default function CreatorPage() {
           const supply = tokenGenerationData.amount;
           const classHash = MY_TOKEN_CONTRACT_CLASS_HASH;
 
-
           // Here is where we call the deploy function of the "Factory" contract
           // This will deploy a new ERC20 token contract with the given name, symbol, supply and class hash
           // TODO: Uncomment to deploy new token contract
           // await factoryContract.data?.invoke(
-          //   "deploy", 
+          //   "deploy",
           //   [name, symbol, supply, classHash],
           // );
         }

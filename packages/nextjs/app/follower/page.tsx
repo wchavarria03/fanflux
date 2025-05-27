@@ -470,8 +470,8 @@ export default function FollowerPage() {
                     No Communities Found
                   </p>
                   <p className="text-base-content/70">
-                    We couldn&apos;t find any communities to recommend at the moment.
-                    Check back later for new communities!
+                    We couldn&apos;t find any communities to recommend at the
+                    moment. Check back later for new communities!
                   </p>
                 </div>
               )}

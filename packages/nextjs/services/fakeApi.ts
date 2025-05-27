@@ -596,13 +596,13 @@ export const marketplaceApi = {
 
     // Deduct tokens
     user.tokens[article.creatorAddress] -= article.price;
-    
+
     // Track purchased article
     user.purchasedArticles = user.purchasedArticles || [];
     if (!user.purchasedArticles.includes(articleId)) {
       user.purchasedArticles.push(articleId);
     }
-    
+
     saveUsers(users);
 
     return true;
@@ -659,7 +659,8 @@ const initializeMockData = () => {
     const mockPosts: Post[] = [
       {
         id: "1",
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         content:
           "Just launched my new NFT collection! Check it out and let me know what you think. This collection represents my journey in digital art over the past year.",
         timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
@@ -692,7 +693,8 @@ const initializeMockData = () => {
       },
       {
         id: "2",
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         content:
           "Just published a new tutorial on building smart contracts with Cairo! Check it out and let me know if you have any questions. Link in bio.",
         timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
@@ -718,7 +720,8 @@ const initializeMockData = () => {
       },
       {
         id: "3",
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         content:
           "Working on some exciting new pieces for my next collection. Here's a sneak peek at the concept art. What do you think about the direction?",
         timestamp: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
@@ -760,7 +763,8 @@ const initializeMockData = () => {
       },
       {
         id: "4",
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         content:
           "Just wrapped up a successful workshop on StarkNet development! Thanks to everyone who participated. The community questions were fantastic. I'll be posting the recording soon.",
         timestamp: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
@@ -807,7 +811,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 1,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/nft1/400/400",
       },
       {
@@ -819,7 +824,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 5,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/workshop1/400/400",
       },
       {
@@ -830,7 +836,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 10,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/masterclass1/400/400",
       },
       {
@@ -842,7 +849,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 75,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/membership1/400/400",
       },
       {
@@ -853,7 +861,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 200,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/tools1/400/400",
       },
       {
@@ -864,7 +873,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 300,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/mentoring1/400/400",
       },
       {
@@ -875,7 +885,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 125,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/portfolio1/400/400",
       },
       {
@@ -886,7 +897,8 @@ const initializeMockData = () => {
         content: "Full content here...",
         price: 50,
         createdAt: new Date().toISOString(),
-        creatorAddress: "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
+        creatorAddress:
+          "0x053819d9eb1d8f61e2f3d6f2c4632d010e2876c8c088a7da7061470070a3c430",
         imageUrl: "https://picsum.photos/seed/templates1/400/400",
       },
     ];
