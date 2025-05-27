@@ -90,7 +90,7 @@ export default function CommunityPage() {
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold mb-8">Community Not Found</h1>
         <p className="text-base-content/70">
-          The community you're looking for doesn't exist.
+          The community you&apos;re looking for doesn&apos;t exist.
         </p>
       </div>
     );

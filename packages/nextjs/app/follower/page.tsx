@@ -370,7 +370,7 @@ export default function FollowerPage() {
                 })
               ) : (
                 <p className="text-base-content/70 text-center">
-                  You haven't subscribed to any communities yet
+                  You haven&apos;t subscribed to any communities yet
                 </p>
               )}
             </div>
@@ -470,7 +470,7 @@ export default function FollowerPage() {
                     No Communities Found
                   </p>
                   <p className="text-base-content/70">
-                    We couldn't find any communities to recommend at the moment.
+                    We couldn&apos;t find any communities to recommend at the moment.
                     Check back later for new communities!
                   </p>
                 </div>
