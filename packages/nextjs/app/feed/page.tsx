@@ -98,6 +98,7 @@ export default function FeedPage() {
   const handleComment = (postId: string, content: string) => {
     if (!address) return;
     const comment = postsApi.addComment(postId, address, content);
+    // @ts-ignore
     setPosts((prev) =>
       prev.map((p) =>
         p.id === postId
